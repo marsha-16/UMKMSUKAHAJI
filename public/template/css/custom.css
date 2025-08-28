@@ -1,0 +1,72 @@
+/* === Sidebar gradient: kuning ke orange === */
+.bg-gradient-primary {
+    background: linear-gradient(180deg, #ffcc00 0%, #ff6600 100%) !important;
+}
+
+/* Tulisan dan ikon sidebar default */
+.sidebar .nav-item .nav-link,
+.sidebar .nav-item .nav-link i {
+    color: #b30000 !important; /* merah tua kontras */
+    font-weight: 600;
+}
+
+/* Hover effect */
+.sidebar .nav-item .nav-link:hover {
+    color: #990000 !important; /* merah lebih gelap saat hover */
+    background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Active link */
+.sidebar .nav-item.active .nav-link {
+    color: #fff !important;
+    background-color: #cc0000 !important; /* merah solid */
+}
+
+/* Tombol primary (search, submit, dll) */
+.btn-primary {
+    background-color: #ff6600 !important; /* orange */
+    border-color: #ff6600 !important;
+}
+.btn-primary:hover {
+    background-color: #cc5200 !important; /* orange lebih gelap */
+    border-color: #cc5200 !important;
+}
+
+/* Ikon notif (bell) juga pakai merah biar serasi */
+.topbar .nav-item .nav-link .badge-counter {
+    background-color: #cc0000 !important;
+}
+
+/* Semua ikon FontAwesome dalam sidebar */
+.sidebar i {
+    color: #ff6600 !important;
+}
+
+/* Hamburger menu (fa-bars) */
+.navbar .fa-bars {
+    color: #ff6600 !important; /* orange */
+    font-size: 20px;
+    cursor: pointer;
+}
+.navbar .fa-bars:hover {
+    color: #cc5200 !important;
+}
+
+/* Tombol search (fa-search fa-fw) */
+.navbar .fa-search.fa-fw {
+    color: white !important; /* biar tetap putih di atas tombol orange */
+    font-size: 16px;
+}
+
+/* Ubah warna hover dropdown item */
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background-color: #cc5200 !important; 
+    color: white !important; 
+}
+
+.bg-umkm {
+    background-color: #cc0000 !important; /* sesuaikan warna logo */
+    color: #fff !important;
+}
+
