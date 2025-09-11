@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('nik', 16);
             $table->text('address');
             $table->string('phone')->nullable();
-            $table->enum('business', ['Warung Kelontong','Makanan dan Minuman','Sayur Mayur dan Daging','Pakaian','Jajanan Pasar','Jasa Fotocopy','Servis Elektronik','Jasa Sumur Bor','Yang lain']);
+            $table->enum('business', ['Warung Kelontong','Makanan dan Minuman','Sayur Mayur dan Daging','Pakaian','Jajanan Pasar','Jasa Fotocopy','Servis Elektronik','Jasa Sumur Bor','Kaligrafi',
+                'Air Isi Ulang', 'Jasa Tenaga', 'Refill Parfum', 'Olahraga dan Hiburan', 'Jual Beli Hewan Ternak', 'Buah-Buahan', 'Home Industri', 'Konter Handphone', 'Accessories']);
             $table->enum('marketing', ['Tunai', 'Online']);
             $table->enum('promotion', ['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab', 'Lainnya']);
             $table->enum('document', ['Nomor Induk Berusaha', 'Sertifikat Halal', 'Pangan Industri Rumah Tangga', 'Belum Punya', 'Dalam Proses']);

@@ -2,32 +2,37 @@
 
 @section('content')
 <div class="container">
-    <h3 class="mb-4">🔍 Hasil Pencarian: <span class="text-primary">{{ $keyword }}</span></h3>
 
-    {{-- USERS --}}
+    <!-- Judul Halaman -->
+    <div class="mb-4 text-center">
+        <h3 class="fw-bold">Hasil Pencarian</h3>
+        <p class="text-muted">Keyword: <span class="text-primary">{{ $keyword }}</span></p>
+    </div>
+
+    <!-- USERS -->
     <div class="card mb-4 shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">👤 Users</h5>
+            <h5 class="mb-0 fw-bold">Data Users</h5>
         </div>
         <div class="card-body">
             @if($users->isEmpty())
-                <div class="alert alert-warning">Tidak ada user ditemukan.</div>
+                <div class="alert alert-warning mb-0">Tidak ada user ditemukan.</div>
             @else
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-bordered table-striped table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Nama</th>
-                                <th>Email</th>
-                                <th>Status</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($users as $user)
                             <tr>
-                                <td><strong>{{ $user->name }}</strong></td>
+                                <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>
+                                <td class="text-center">
                                     @switch($user->status)
                                         @case('submitted')
                                             <span class="badge bg-warning text-dark">Submitted</span>
@@ -51,32 +56,32 @@
         </div>
     </div>
 
-    {{-- PEMETAAN --}}
+    <!-- PEMETAAN -->
     <div class="card mb-4 shadow-sm">
         <div class="card-header bg-info text-white">
-            <h5 class="mb-0">🏬 Pemetaan UMKM</h5>
+            <h5 class="mb-0 fw-bold">Data Pemetaan UMKM</h5>
         </div>
         <div class="card-body">
             @if($pemetaans->isEmpty())
-                <div class="alert alert-warning">Tidak ada data UMKM ditemukan.</div>
+                <div class="alert alert-warning mb-0">Tidak ada data UMKM ditemukan.</div>
             @else
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-bordered table-striped table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>NIK</th>
-                                <th>Nama</th>
-                                <th>Alamat</th>
-                                <th>Status</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">NIK</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($pemetaans as $pemetaan)
                             <tr>
+                                <td>{{ $pemetaan->name }}</td>
                                 <td>{{ $pemetaan->nik }}</td>
-                                <td><strong>{{ $pemetaan->name }}</strong></td>
                                 <td>{{ $pemetaan->address }}</td>
-                                <td>
+                                <td class="text-center">
                                     @switch($pemetaan->status)
                                         @case('process')
                                             <span class="badge bg-info text-white">Process</span>
@@ -99,5 +104,21 @@
             @endif
         </div>
     </div>
+
 </div>
+
+<style>
+    /* Opsional: table header bold dan rata tengah */
+    th {
+        font-weight: 600;
+        text-align: center;
+        vertical-align: middle;
+    }
+    td {
+        vertical-align: middle;
+    }
+    .badge {
+        font-size: 0.9rem;
+    }
+</style>
 @endsection

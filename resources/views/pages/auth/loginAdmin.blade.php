@@ -71,10 +71,10 @@
                                             Login
                                         </button>
                                     </form>
-                                    <hr>
+                                    {{-- <hr>
                                     <div class="text-center">
                                         <a class="small" href="/register" style="color:black">Buat Akun Baru!</a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

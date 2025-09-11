@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\UMKM;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -15,6 +17,15 @@ class UserSeeder extends Seeder
     public function run(): void
     {
 
+         Admin::create([
+            'id' => 1,
+            'name' => 'Admin UMKM Sukahaji',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password'),
+            'status' => 'approved',
+            'role_id' => '1',  //=> 'Admin'
+        ]);
+
         User::create([
             'id' => 2,
             'name' => 'Penduduk 1',
@@ -24,16 +35,6 @@ class UserSeeder extends Seeder
             'role_id' => '2',  //=> 'User'
         ]);
 
-        UMKM::create([
-            'user_id' => 2,
-            'name' => 'Dewi',
-            'nik' => '3273035802950005',
-            'address' => 'Jl.Bacip',
-            'phone' => '089678903898',
-            'business' => 'Warung Kelontong',
-            'marketing' => 'Tunai',
-            'promotion' => 'Facebook',
-            'document' => 'Nomor Induk Berusaha',
-        ]);
+        
     }
 }

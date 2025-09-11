@@ -61,7 +61,17 @@
                                 'Jajanan Pasar',
                                 'Jasa Fotocopy',
                                 'Servis Elektronik',
-                                'Jasa Sumur Bor'
+                                'Jasa Sumur Bor',
+                                'Kaligrafi',
+                                'Air Isi Ulang',
+                                'Jasa Tenaga',
+                                'Refill Parfum',
+                                'Olahraga dan Hiburan',
+                                'Jual Beli Hewan Ternak',
+                                'Buah-Buahan',
+                                'Home Industri',
+                                'Konter Handphone',
+                                ' Accessories'
                             ] as $item)
                                 <option value="{{ $item }}" @selected(old('business') == $item)>{{ $item }}</option>
                             @endforeach

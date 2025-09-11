@@ -19,23 +19,33 @@ class ReportController extends Controller
      * Show report page - Admin Only
      */
     public function showReportPage()
-    {
-        $this->authorizeAdmin();
-
-        $pemetaans = Pemetaan::all();
-
-        return view('pages.reports.umkm-report', compact('pemetaans'));
-    }
-
-    public function printAll()
 {
     $this->authorizeAdmin();
 
-    // Ambil semua data tanpa pagination
-    $pemetaans = Pemetaan::orderBy('created_at', 'desc')->get();
+    // Untuk web (paginate)
+    $pemetaans = Pemetaan::orderBy('created_at', 'desc')->paginate(5);
 
-    return view('pages.reports.umkm-report', compact('pemetaans'));
+    // Untuk print (semua data)
+    $pemetaansAll = Pemetaan::orderBy('created_at', 'desc')->get();
+
+    return view('pages.reports.umkm-report', compact('pemetaans', 'pemetaansAll'));
 }
+
+
+
+//     public function printAll()
+// {
+//     $this->authorizeAdmin();
+
+//     // Ambil semua data
+//     $pemetaansAll = Pemetaan::orderBy('created_at', 'desc')->get();
+
+//     // Agar Blade tidak error, buat $pemetaans kosong
+//     $pemetaans = collect();
+
+//     return view('pages.reports.umkm-report', compact('pemetaans', 'pemetaansAll'));
+// }
+
 
 
     /**
@@ -141,7 +151,7 @@ class ReportController extends Controller
             'created_at'   => $item->created_at->format('d/m/Y H:i'),
             'status'       => $item->status,
             'status_label' => $this->getStatusLabel($item->status),
-            'has_photo'    => !empty($item->photo_proof)
+            // 'has_photo'    => !empty($item->photo_proof)
         ];
     }
 

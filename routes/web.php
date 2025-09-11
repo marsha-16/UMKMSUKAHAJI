@@ -85,7 +85,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/admin/pemetaan/update-status/{id}', [PemetaanController::class, 'update_status'])->name('admin.pemetaan.update_status');
 
     Route::get('/reports/umkm', [ReportController::class, 'showReportPage'])->name('reports.umkm'); 
-    Route::get('/reports/umkm', [ReportController::class, 'printAll'])->name('reports.umkm'); 
+    // Route::get('/reports/umkm', [ReportController::class, 'printAll'])->name('reports.umkm'); 
     
     Route::post('/pemetaan/{id}/read', [PemetaanController::class, 'markAsRead'])
     ->name('pemetaan.read');

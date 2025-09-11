@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Pemetaan extends Model
 {
@@ -18,9 +19,19 @@ class Pemetaan extends Model
         };
     }
 
-    public function getReportDateLabelAttribute() // report_date_label
+    public function getReportDateLabelAttribute()
     {
-        return \Carbon\Carbon::parse($this->report_date)->format('d M Y H:i:s');
+        // kalau ada kolom report_date di DB
+        if ($this->report_date) {
+            return Carbon::parse($this->report_date)
+                ->timezone('Asia/Jakarta')
+                ->translatedFormat('d F Y H:i');
+        }
+
+        // fallback: pakai created_at
+        return Carbon::parse($this->created_at)
+            ->timezone('Asia/Jakarta')
+            ->translatedFormat('d F Y H:i');
     }
 
     public function getStatusColorAttribute() //status_color

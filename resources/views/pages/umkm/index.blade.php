@@ -85,10 +85,45 @@
                     @endif
                     </table>
                 </div>
-                @if ($umkms->lastPage() > 1)
-                <div class="card-footer">
-                    {{ $umkms->links('pagination::bootstrap-5') }}
-                </div>
+               @if ($umkms->lastPage() > 1)
+                    <div style="margin: 10px 20px 40px 20px; display: flex; justify-content: space-between; align-items: center;">
+                        
+                        {{-- Info jumlah data --}}
+                        <div style="font-size: 14px; color: #374151;">
+                            Menampilkan {{ $umkms->firstItem() }} - {{ $umkms->lastItem() }} dari {{ $umkms->total() }} data
+                        </div>
+
+                        {{-- Pagination --}}
+                        <div style="display: flex; gap: 5px;">
+                            {{-- Tombol Prev --}}
+                            @if ($umkms->onFirstPage())
+                                <span style="padding: 6px 12px; background: #fcd9b6; border-radius: 5px; color: #9ca3af;">&laquo; Prev</span>
+                            @else
+                                <a href="{{ $umkms->previousPageUrl() }}" style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px; text-decoration: none;">&laquo; Prev</a>
+                            @endif
+
+                            {{-- Nomor halaman terbatas 3 --}}
+                            @php
+                                $start = max($umkms->currentPage() - 1, 1);
+                                $end = min($umkms->currentPage() + 1, $umkms->lastPage());
+                            @endphp
+
+                            @for ($page = $start; $page <= $end; $page++)
+                                @if ($page == $umkms->currentPage())
+                                    <span style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px;">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $umkms->url($page) }}" style="padding: 6px 12px; background: #fde68a; color: #374151; border-radius: 5px; text-decoration: none;">{{ $page }}</a>
+                                @endif
+                            @endfor
+
+                            {{-- Tombol Next --}}
+                            @if ($umkms->hasMorePages())
+                                <a href="{{ $umkms->nextPageUrl() }}" style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px; text-decoration: none;">Next &raquo;</a>
+                            @else
+                                <span style="padding: 6px 12px; background: #fcd9b6; border-radius: 5px; color: #9ca3af;">Next &raquo;</span>
+                            @endif
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>

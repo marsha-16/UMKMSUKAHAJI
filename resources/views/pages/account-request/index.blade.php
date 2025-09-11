@@ -66,9 +66,44 @@
                     </div>
                 </div>
                 @if ($users->lastPage() > 1)
-                <div class="card-footer">
-                    {{ $users->links('pagination::bootstrap-5') }}
-                </div>
+                    <div style="margin: 10px 20px 40px 20px; display: flex; justify-content: space-between; align-items: center;">
+                        
+                        {{-- Info jumlah data --}}
+                        <div style="font-size: 14px; color: #374151;">
+                            Menampilkan {{ $users->firstItem() }} - {{ $users->lastItem() }} dari {{ $users->total() }} data
+                        </div>
+
+                        {{-- Pagination --}}
+                        <div style="display: flex; gap: 5px;">
+                            {{-- Tombol Prev --}}
+                            @if ($users->onFirstPage())
+                                <span style="padding: 6px 12px; background: #fcd9b6; border-radius: 5px; color: #9ca3af;">&laquo; Prev</span>
+                            @else
+                                <a href="{{ $users->previousPageUrl() }}" style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px; text-decoration: none;">&laquo; Prev</a>
+                            @endif
+
+                            {{-- Nomor halaman terbatas 3 --}}
+                            @php
+                                $start = max($users->currentPage() - 1, 1);
+                                $end = min($users->currentPage() + 1, $users->lastPage());
+                            @endphp
+
+                            @for ($page = $start; $page <= $end; $page++)
+                                @if ($page == $users->currentPage())
+                                    <span style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px;">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $users->url($page) }}" style="padding: 6px 12px; background: #fde68a; color: #374151; border-radius: 5px; text-decoration: none;">{{ $page }}</a>
+                                @endif
+                            @endfor
+
+                            {{-- Tombol Next --}}
+                            @if ($users->hasMorePages())
+                                <a href="{{ $users->nextPageUrl() }}" style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px; text-decoration: none;">Next &raquo;</a>
+                            @else
+                                <span style="padding: 6px 12px; background: #fcd9b6; border-radius: 5px; color: #9ca3af;">Next &raquo;</span>
+                            @endif
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>

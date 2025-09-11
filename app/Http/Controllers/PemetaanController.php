@@ -65,7 +65,9 @@ class PemetaanController extends Controller
             'business' => ['required', Rule::in([
                 'Warung Kelontong', 'Makanan dan Minuman', 'Sayur Mayur dan Daging',
                 'Pakaian', 'Jajanan Pasar', 'Jasa Fotocopy',
-                'Servis Elektronik', 'Jasa Sumur Bor', 'Yang lain'
+                'Servis Elektronik', 'Jasa Sumur Bor', 'Kaligrafi', 'Air Isi Ulang', 
+                'Jasa Tenaga', 'Refill Parfum', 'Olahraga dan Hiburan', 'Jual Beli Hewan Ternak',
+                'Buah-Buahan', 'Home Industri', 'Konter Handphone', 'Accessories'
             ])],
             'marketing' => ['required', Rule::in(['Tunai', 'Online'])],
             'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
@@ -123,7 +125,7 @@ class PemetaanController extends Controller
             'business' => ['required', Rule::in([
                 'Warung Kelontong', 'Makanan dan Minuman', 'Sayur Mayur dan Daging',
                 'Pakaian', 'Jajanan Pasar', 'Jasa Fotocopy',
-                'Servis Elektronik', 'Jasa Sumur Bor', 'Yang lain'
+                'Servis Elektronik', 'Jasa Sumur Bor', 'Kaligrafi'
             ])],
             'marketing' => ['required', Rule::in(['Tunai', 'Online'])],
             'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],

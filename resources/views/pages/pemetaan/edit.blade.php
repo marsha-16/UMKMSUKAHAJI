@@ -84,6 +84,46 @@
                                         "label" => "Jasa Sumur Bor",
                                         "value" => "Jasa Sumur Bor",
                                     ],
+                                    (object) [
+                                        "label" => "Kaligrafi",
+                                        "value" => "Kaligrafi",
+                                    ],
+                                    (object) [
+                                        "label" => "Air Isi Ulang",
+                                        "value" => "Air Isi Ulang",
+                                    ],
+                                    (object) [
+                                        "label" => "Jasa Tenaga",
+                                        "value" => "Jasa Tenaga",
+                                    ],
+                                    (object) [
+                                        "label" => "Refill Parfum",
+                                        "value" => "Refill Parfum",
+                                    ],
+                                    (object) [
+                                        "label" => "Olahraga dan Hiburan",
+                                        "value" => "Olahraga dan Hiburan",
+                                    ],
+                                    (object) [
+                                        "label" => "Jual Beli Hewan Ternak",
+                                        "value" => "Jual Beli Hewan Ternak",
+                                    ],
+                                    (object) [
+                                        "label" => "Buah-Buahan",
+                                        "value" => "Buah-Buahan",
+                                    ],
+                                    (object) [
+                                        "label" => "Home Industri",
+                                        "value" => "Home Industri",
+                                    ],
+                                    (object) [
+                                        "label" => "Konter Handphone",
+                                        "value" => "Konter Handphone",
+                                    ],
+                                    (object) [
+                                        "label" => "Accessories",
+                                        "value" => "Accessories",
+                                    ],
                                 ] as $item)
                                 <option value="{{ $item->value }}" @selected(old('business', $pemetaan->business) == $item->value)>{{ $item->label }}</option>
                                 @endforeach

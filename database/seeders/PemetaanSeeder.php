@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Pemetaan;
+use App\Models\UMKM;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,6 +14,13 @@ class PemetaanSeeder extends Seeder
      */
     public function run(): void
     {
+        UMKM::create([
+            'id' => 1,
+            'user_id' => 1,
+            'name' => 'Dewi',
+            'address' => 'Jl.Bacip',
+        ]);
+        
         Pemetaan::create([
             'umkm_id' => 1,
             'name' => 'Dewi',
