@@ -201,5 +201,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 </script>
-
 @endsection
