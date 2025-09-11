@@ -11,8 +11,9 @@
 
             <!-- Teks Judul -->
             <div class="flex-grow-1 text-center">
-                <h3 class="mt-2 mb-1">KELURAHAN SUKAHAJI</h3>
-                <p class="mb-0">Jl. H.Zakaria No. 24, Kelurahan Sukahaji, Kecamatan Babakan Ciparay, Kota Bandung, 40221</p>
+                <h2 class="mt-2 mb-1">KELURAHAN SUKAHAJI</h2>
+                <p class="mb-0">Jalan H. Zakaria No. 24 Kota Bandung, 40221</p>
+                <p class="mb-0">Telp. (022) 6026078</p>
             </div>
 
             <!-- Logo Kanan (UMKM) -->
@@ -47,8 +48,8 @@
                 <th>Jenis Pemasaran</th>
                 <th>Platform Digital</th>
                 <th>Dokumen Penunjang</th>
-                <th>File Dokumen</th>
                 <th>Tanggal Input</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -63,31 +64,15 @@
                     <td>{{ $item->marketing }}</td>
                     <td>{{ $item->promotion }}</td>
                     <td>{{ $item->document }}</td>
-                    <td>
-                        @if (!empty($item->photo_proof))
-                            @php 
-                                $filePath = 'storage/' . $item->photo_proof; 
-                                $ext = pathinfo($filePath, PATHINFO_EXTENSION);
-                            @endphp
-                    
-                            @if(in_array(strtolower($ext), ['jpg','jpeg','png','gif']))
-                                <img src="{{ asset($filePath) }}" alt="File Dokumen" style="max-width: 120px; max-height: 120px;">
-                            @elseif(strtolower($ext) === 'pdf')
-                                <a href="{{ asset($filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                    📄 Lihat PDF
-                                </a>
-                            @else
-                                <a href="{{ asset($filePath) }}" target="_blank">Unduh Dokumen</a>
-                            @endif
-                        @else
-                            Tidak ada
-                        @endif
-                    </td>                    
                     <td>{{ $item->report_date_label }}</td>
+                    <td>
+                        <span>{{ $item->status_label }}</span>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+</div>
 </div>
 
 <style>
@@ -129,8 +114,8 @@
         text-align: center !important;
         margin-bottom: 15px !important;
     }
-    .report-header h3 {
-        font-size: 14pt !important;
+    .report-header h2 {
+        font-size: 18pt !important;
         font-weight: bold !important;
         margin-bottom: 4px !important;
     }
@@ -153,13 +138,6 @@
         text-align: center !important;
         vertical-align: middle !important;
         word-wrap: break-word !important;
-    }
-    /* Gambar dalam tabel */
-    td img {
-        max-width:60px !important;
-        max-height: 60px !important;
-        display: block !important;
-        margin: auto !important;
     }
 
     /* Link jadi teks biasa */

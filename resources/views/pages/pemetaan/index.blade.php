@@ -71,7 +71,6 @@
                                 <th>Jenis Pemasaran</th>
                                 <th>Platform Digital</th>
                                 <th>Dokumen Penunjang</th>
-                                <th>File Dokumen</th>
                                 <th>Tanggal Laporan</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -100,63 +99,38 @@
                                     <td>{{ $item->marketing }}</td>
                                     <td>{{ $item->promotion }}</td>
                                     <td>{{ $item->document }}</td>
-                                    <td>
-                                        @if (isset($item->photo_proof))
-                                            @php
-                                                $filePath = 'storage/' . $item->photo_proof;
-                                            @endphp
-                                            <a href="{{ $filePath }}" target="_blank" rel="noopener noreferrer">    
-                                                <img src="{{ $filePath }}" alt="File Dokumen" style="max-width: 300px;">
-                                            </a>
-                                        @else
-                                            Tidak ada
-                                        @endif
-                                    </td>
                                     <td>{{ $item->report_date_label }}</td>
                                     <td>
                                         <span class="badge badge-{{ $item->status_color }}">{{ $item->status_label }}</span>
                                     </td>
                                     <td>
-                                        @if (auth('web')->check() 
-                                        && isset(auth('web')->user()->umkm) 
-                                        && $item->status == 'process')
-                                        <div class="d-flex align-items-center" style="gap: 10px;">
-                                            <a href="/pemetaan/{{ $item->id }}" class="d-inline-block btn btn-sm btn-warning">
-                                                <i class="fas fa-pen"></i>
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationDelete-{{ $item->id }}">
-                                                <i class="fas fa-eraser"></i>
-                                            </button>
-                                        </div>
+                                        @if (auth('web')->check() && isset(auth('web')->user()->umkm) && $item->status == 'process')
+                                            <!-- USER BIASA: Edit & Hapus -->
+                                            <div class="d-flex align-items-center" style="gap: 10px;">
+                                                <a href="/pemetaan/{{ $item->id }}" class="d-inline-block btn btn-sm btn-warning">
+                                                    <i class="fas fa-pen"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationDelete-{{ $item->id }}">
+                                                    <i class="fas fa-eraser"></i>
+                                                </button>
+                                            </div>
                                         @elseif (auth('admin')->check())
-                                        <div>
-                                            <form id="formChangeStatus-{{ $item->id }}" action="/pemetaan/update-status/{{ $item->id }}" method="post" style="min-width: 150px;" oninput="document.getElementById('formChangeStatus-{{ $item->id }}').submit()">
+                                            <!-- ADMIN: Update Status -->
+                                            <form id="formChangeStatus-{{ $item->id }}" action="/pemetaan/update-status/{{ $item->id }}" method="post" style="min-width: 150px;">
                                                 @csrf
                                                 @method('POST')
-                                                <div class="form-group">
-                                                    <select name="status" id="status" class="form-control">
-                                                        @foreach ([
-                                                            (object) [
-                                                                'label' => 'Sedang Diproses',
-                                                                'value' => 'process',
-                                                            ],
-                                                            (object) [
-                                                                'label' => 'Diterima',
-                                                                'value' => 'approve',
-                                                            ],
-                                                            (object) [
-                                                                'label' => 'Ditolak',
-                                                                'value' => 'rejected',
-                                                            ],
-                                                        ] as $status)
-                                                            <option value="{{ $status->value }}" @selected($item->status == $status->value)>{{ $status->label }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                <select name="status" class="form-control" onchange="this.form.submit()">
+                                                    @foreach ([
+                                                        (object)['label' => 'Sedang Diproses', 'value' => 'process'],
+                                                        (object)['label' => 'Diterima', 'value' => 'approve'],
+                                                        (object)['label' => 'Ditolak', 'value' => 'rejected']
+                                                    ] as $status)
+                                                        <option value="{{ $status->value }}" @selected($item->status == $status->value)>{{ $status->label }}</option>
+                                                    @endforeach
+                                                </select>
                                             </form>
-                                        </div>
                                         @endif
-                                    </td>
+                                    </td>                                    
                                 </tr>
                                 @include('pages.pemetaan.confirmation-delete')
                             @endforeach

@@ -21,9 +21,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->enum('business', ['Warung Kelontong','Makanan dan Minuman','Sayur Mayur dan Daging','Pakaian','Jajanan Pasar','Jasa Fotocopy','Servis Elektronik','Jasa Sumur Bor','Yang lain']);
             $table->enum('marketing', ['Tunai', 'Online']);
-            $table->enum('promotion', ['Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab', 'Lainnya']);
+            $table->enum('promotion', ['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab', 'Lainnya']);
             $table->enum('document', ['Nomor Induk Berusaha', 'Sertifikat Halal', 'Pangan Industri Rumah Tangga', 'Belum Punya', 'Dalam Proses']);
-            $table->string('photo_proof')->nullable();
             $table->timestamp('report_date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->enum('status', ['process','approve', 'rejected'])->default('process');
             $table->timestamps();

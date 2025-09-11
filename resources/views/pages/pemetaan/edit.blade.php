@@ -121,6 +121,10 @@
                                 <select name="promotion" id="promotion" class="form-control @error('promotion') is-invalid @enderror">
                                     @foreach ([
                                         (object) [
+                                            'label' => 'Whatsapp',
+                                            'value' => 'Whatsapp',
+                                        ],
+                                        (object) [
                                             'label' => 'Facebook',
                                             'value' => 'Facebook',
                                         ],
@@ -187,26 +191,14 @@
                                     {{ $message }}
                                 </span>
                             @enderror
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="photo_proof">File Dokumen</label>
-                                <input type="file" name="photo_proof" id="photo_proof" class="form-control @error('photo_proof') is-invalid @enderror" value="{{ old('photo_proof') }}">
-                                @error('photo_proof')
-                                <span class="invalid-feedback">
-                                    {{ $message }}
-                                </span>
-                            @enderror
-                            </div>
                         </div>
+
                     </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-end" style="gap: 10px;">
-                            <a href="/pemetaan" class="btn btn-outline-secondary">
-                                Kembali
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                Simpan
-                            </button>
+                    <!-- Footer sejajar tombol -->
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <div style="gap:10px;">
+                            <a href="/pemetaan" class="btn btn-outline-secondary">Kembali</a>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </div>
                 </div>

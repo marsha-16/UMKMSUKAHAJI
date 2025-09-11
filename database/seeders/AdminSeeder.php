@@ -14,10 +14,10 @@ class AdminSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
-    {
+    { 
         Admin::create([
             'id' => 1,
-            'name' => 'Admin Sukahaji',
+            'name' => 'Admin UMKM Sukahaji',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
             'status' => 'approved',

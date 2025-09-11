@@ -41,7 +41,12 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6 d-flex align-items-center justify-content-center bg-white">
+                                <img src="{{ asset('images/logo.png') }}" 
+                                     alt="Logo" 
+                                     class="img-fluid rounded-circle" 
+                                     style="max-width: 250px; width: 80%;">
+                            </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">

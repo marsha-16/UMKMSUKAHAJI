@@ -72,7 +72,7 @@ class UserController extends Controller
             $user = Auth::guard('web')->user();   // user biasa login
         }
 
-        return view('pages.profile.index'); 
+        return view('pages.profile.index', compact('user'));
     }
 
     public function update_profile(Request $request, $userId)
@@ -86,21 +86,10 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|min:3',
             'email' => 'required|email',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // $user = User::findOrFail($userId);
         $user->name = $request->name;
         $user->email = $request->email;
-        if ($request->hasFile('photo')) {
-        // Hapus foto lama
-        if ($user->photo && Storage::exists('public/'.$user->photo)) {
-            \Storage::delete('public/'.$user->photo);
-        }
-
-        $path = $request->file('photo')->store('photos', 'public');
-        $user->photo = $path;
-        }
         $user->save();
 
         return redirect('/profile')->with('success', 'Profil berhasil diperbarui');

@@ -29,40 +29,21 @@
                     <div class="card-body">
                         <div class="form-group mb-3 text-center">
                             <div class="position-relative d-inline-block" style="cursor: pointer;">
-                                <label for="photo" class="m-0">
-                                    <img id="previewPhoto"
-                                        src="{{ $user->photo ? asset('storage/'.$user->photo) : asset('default-avatar.png') }}"
-                                        alt="Foto Profil" class="rounded-circle mb-2"
-                                        width="120" height="120" style="object-fit: cover;">
-                                    <div class="position-absolute bg-primary rounded-circle p-2"
-                                        style="bottom: 5px; right: 5px;">
-                                        <i class="fas fa-camera text-white"></i>
-                                    </div>
-                                </label>
+                                @if(Auth::guard('admin')->check())
+                                {{-- Admin = biru --}}
+                                <span class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto"
+                                      style="width: 120px; height: 120px;">
+                                    <i class="fas fa-user-circle text-white" style="font-size: 70px;"></i>
+                                </span>
+                            @else
+                                {{-- User = abu-abu --}}
+                                <span class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto"
+                                      style="width: 120px; height: 120px;">
+                                    <i class="fas fa-user-circle text-white" style="font-size: 70px;"></i>
+                                </span>
+                            @endif 
                             </div>
-    
-                            <div>
-                                <label for="photo">Foto Profil</label>
-                            </div>
-                            <input type="file" id="photo" name="photo"
-                                class="d-none @error('photo') is-invalid @enderror"
-                                accept="image/*" onchange="previewImage(event)">
-                                
-                            @error('photo')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <script>
-                            function previewImage(event) {
-                                const reader = new FileReader();
-                                reader.onload = function(){
-                                    document.getElementById('previewPhoto').src = reader.result;
-                                }
-                                reader.readAsDataURL(event.target.files[0]);
-                            }
-                            </script>
-                            
+                        </div>                           
                         <div class="form-group mb-3">
                             <label for="name">Nama Lengkap</label>
                             <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', auth()->user()->name) }}">

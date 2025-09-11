@@ -68,9 +68,8 @@ class PemetaanController extends Controller
                 'Servis Elektronik', 'Jasa Sumur Bor', 'Yang lain'
             ])],
             'marketing' => ['required', Rule::in(['Tunai', 'Online'])],
-            'promotion' => ['required', Rule::in(['Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
+            'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
             'document' => ['required', Rule::in(['Nomor Induk Berusaha', 'Sertifikat Halal', 'Pangan Industri Rumah Tangga', 'Belum Punya', 'Dalam Proses'])],
-            'photo_proof' => ['nullable', 'image', 'mimes:png,jpg,jpeg,pdf', 'max:2048'],
         ]);
 
         $umkm = Auth::user()->umkm;
@@ -89,11 +88,6 @@ class PemetaanController extends Controller
         $pemetaan->marketing = $request->input('marketing');
         $pemetaan->promotion = $request->input('promotion');
         $pemetaan->document = $request->input('document');
-
-        if($request->hasFile('photo_proof')) {
-           $filePath = $request->file('photo_proof')->store('public/uploads');
-           $pemetaan->photo_proof = $filePath;
-        }
 
         $pemetaan->save();
 
@@ -132,9 +126,8 @@ class PemetaanController extends Controller
                 'Servis Elektronik', 'Jasa Sumur Bor', 'Yang lain'
             ])],
             'marketing' => ['required', Rule::in(['Tunai', 'Online'])],
-            'promotion' => ['required', Rule::in(['Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
+            'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
             'document' => ['required', Rule::in(['Nomor Induk Berusaha', 'Sertifikat Halal', 'Pangan Industri Rumah Tangga', 'Belum Punya', 'Dalam Proses'])],
-            'photo_proof' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
         ]);
 
         $umkm = Auth::user()->umkm;
@@ -159,14 +152,6 @@ class PemetaanController extends Controller
         $pemetaan->promotion = $request->input('promotion');
         $pemetaan->document = $request->input('document');
 
-        if($request->hasFile('photo_proof')) {
-            if (isset($pemetaan->photo_proof)) {
-                Storage::delete($pemetaan->photo_proof);
-            }
-            $filePath = $request->file('photo_proof')->store('public/uploads');
-            $pemetaan->photo_proof = $filePath;
-        }
-
         $pemetaan->save();
 
         return redirect('/pemetaan')->with('success', 'Berhasil Mengubah UMKM');
@@ -184,11 +169,6 @@ class PemetaanController extends Controller
 
         if ($pemetaan->status != 'process') {
             return redirect('/pemetaan')->with('error', "Gagal menghapus data UMKM");
-        }
-
-        // Hapus file dari storage
-        if ($pemetaan->photo_proof && Storage::exists($pemetaan->photo_proof)) {
-            Storage::delete($pemetaan->photo_proof);
         }
 
         // Hapus record di database

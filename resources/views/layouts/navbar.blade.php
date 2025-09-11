@@ -161,9 +161,25 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
-                <img src="{{ auth()->user()->photo ? asset('storage/'.auth()->user()->photo) : asset('default-avatar.png') }}"
-                                        class="rounded-circle" width="40" height="40">
+                
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                    {{ auth()->user()->name }}
+                </span>
+
+                {{-- Avatar --}}
+                @if(Auth::guard('admin')->check())
+                    {{-- Admin = biru --}}
+                    <span class="rounded-circle bg-primary d-flex align-items-center justify-content-center"
+                        style="width: 40px; height: 40px;">
+                        <i class="fas fa-user-circle text-white"></i>
+                    </span>
+                @else
+                    {{-- User = abu-abu --}}
+                    <span class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+                        style="width: 40px; height: 40px;">
+                        <i class="fas fa-user-circle text-white"></i>
+                    </span>
+                @endif
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
