@@ -99,7 +99,10 @@
                                     <td>{{ $item->marketing }}</td>
                                     <td>{{ $item->promotion }}</td>
                                     <td>{{ $item->document }}</td>
-                                    <td>{{ $item->report_date_label }}</td>
+                                    <td data-report-date="{{ \Carbon\Carbon::parse($item->report_date)->toIso8601String() }}">
+                                        {{ $item->report_date_label }}
+                                    </td>
+
                                     <td>
                                         <span class="badge badge-{{ $item->status_color }}">{{ $item->status_label }}</span>
                                     </td>
@@ -181,4 +184,22 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const { DateTime } = luxon;
+
+    document.querySelectorAll("[data-report-date]").forEach(td => {
+        const rawDate = td.getAttribute("data-report-date");
+
+        // Konversi UTC → Asia/Jakarta
+        const formatted = DateTime.fromISO(rawDate, { zone: "utc" })
+            .setZone("Asia/Jakarta")
+            .toFormat("dd LLLL yyyy HH:mm:ss");
+
+        td.textContent = formatted;
+    });
+});
+</script>
+
 @endsection
