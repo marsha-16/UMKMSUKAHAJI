@@ -3,21 +3,22 @@
 @section('content')
 <div class="container">
 
-    <!-- Judul Halaman -->
-    <div class="mb-4 text-center">
-        <h3 class="fw-bold">Hasil Pencarian</h3>
-        <p class="text-muted">Keyword: <span class="text-primary">{{ $keyword }}</span></p>
-    </div>
+    <!-- Hasil Pencarian -->
+    @isset($keyword)
+        <div class="mb-4 text-center">
+            <h5 class="fw-bold">Hasil Pencarian: <span class="text-primary">{{ $keyword }}</span></h5>
+        </div>
+    @endisset
 
     <!-- USERS -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-primary text-white">
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header text-white" style="background: linear-gradient(90deg, #fbbf24, #f97316, #dc2626, #111827);">
             <h5 class="mb-0 fw-bold">Data Users</h5>
         </div>
         <div class="card-body">
-            @if($users->isEmpty())
+            @if(isset($users) && $users->isEmpty())
                 <div class="alert alert-warning mb-0">Tidak ada user ditemukan.</div>
-            @else
+            @elseif(isset($users))
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover align-middle mb-0">
                         <thead class="table-light">
@@ -57,14 +58,14 @@
     </div>
 
     <!-- PEMETAAN -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-info text-white">
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header text-white" style="background: linear-gradient(90deg, #fbbf24, #f97316, #dc2626, #111827);">
             <h5 class="mb-0 fw-bold">Data Pemetaan UMKM</h5>
         </div>
         <div class="card-body">
-            @if($pemetaans->isEmpty())
+            @if(isset($pemetaans) && $pemetaans->isEmpty())
                 <div class="alert alert-warning mb-0">Tidak ada data UMKM ditemukan.</div>
-            @else
+            @elseif(isset($pemetaans))
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover align-middle mb-0">
                         <thead class="table-light">
@@ -108,7 +109,6 @@
 </div>
 
 <style>
-    /* Opsional: table header bold dan rata tengah */
     th {
         font-weight: 600;
         text-align: center;

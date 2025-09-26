@@ -6,9 +6,12 @@ use App\Http\Controllers\UmkmController;
 use App\Http\Controllers\PemetaanController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\User\AuthController as UserAuthController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\User\TentangUmkmController as UserTentangUmkmController;
+use App\Http\Controllers\Admin\TentangUmkmController as AdminTentangUmkmController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 // =================== HALAMAN UTAMA ===================
 Route::get('/', function () {
@@ -17,11 +20,20 @@ Route::get('/', function () {
 
 // =================== USER AUTH ===================
 Route::get('/login', [UserAuthController::class, 'loginForm'])->name('auth.login'); 
+
 Route::post('/login', [UserAuthController::class, 'login'])->name('user.login.submit');
 
 Route::get('/dashboard', function () {
     return view('pages.user.dashboard');
 })->middleware('auth:web')->name('user.dashboard');
+
+// USER LOGOUT
+Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
+
+// Halaman form register
+Route::get('/register', [AuthController::class, 'registerView'])->name('register.view');
+// Proses submit register
+Route::post('/register', [AuthController::class, 'registerSubmit'])->name('register');
 
 // =================== ADMIN AUTH ===================
 Route::get('/loginAdmin', [AdminAuthController::class, 'loginForm'])->name('auth.loginAdmin');
@@ -31,18 +43,8 @@ Route::get('/dashboardAdmin', function () {
     return view('pages.admin.dashboardAdmin');
 })->middleware('auth:admin')->name('admin.dashboard');
 
-// USER LOGOUT
-Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
-
 // ADMIN LOGOUT
 Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
-
-
-// Halaman form register
-Route::get('/register', [AuthController::class, 'registerView'])->name('register.view');
-
-// Proses submit register
-Route::post('/register', [AuthController::class, 'registerSubmit'])->name('register');
 
 // =================== NOTIFICATION (Admin & User) ===================
 Route::get('/notification', function () {
@@ -50,9 +52,9 @@ Route::get('/notification', function () {
 })->middleware('auth:web,admin');
 
 Route::post('/notification/{id}/read', function ($id) {
-    $notification = \Illuminate\Support\Facades\DB::table('notifications')->where('id', $id);
+    $notification = DB::table('notifications')->where('id', $id);
     $notification->update([
-        'read_at'=> \Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'),
+        'read_at'=> DB::raw('CURRENT_TIMESTAMP'),
     ]);
 
     $dataArray = json_decode($notification->firstOrFail()->data, true);
@@ -80,15 +82,14 @@ Route::middleware('auth:admin')->group(function () {
     // pemetaan status update
     Route::post('/pemetaan/update-status/{id}', [PemetaanController::class, 'update_status']);
 
-    // khusus admin
-    // Route::get('/admin/pemetaan', [PemetaanController::class, 'index'])->name('admin.pemetaan');
     Route::post('/admin/pemetaan/update-status/{id}', [PemetaanController::class, 'update_status'])->name('admin.pemetaan.update_status');
 
     Route::get('/reports/umkm', [ReportController::class, 'showReportPage'])->name('reports.umkm'); 
-    // Route::get('/reports/umkm', [ReportController::class, 'printAll'])->name('reports.umkm'); 
     
     Route::post('/pemetaan/{id}/read', [PemetaanController::class, 'markAsRead'])
-    ->name('pemetaan.read');
+        ->name('pemetaan.read');
+
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
 });
 
 // =================== ADMIN & USER ===================
@@ -98,7 +99,7 @@ Route::middleware(['auth:admin,web'])->group(function () {
     Route::get('/change-password', [UserController::class, 'change_password_view']);
     Route::post('/change-password/{id}', [UserController::class, 'change_password']);
 
-    Route::get('/search', [SearchController::class, 'index'])->name('search');
+    // Route::get('/search', [SearchController::class, 'index'])->name('search');
 
     Route::get('/pemetaan', [PemetaanController::class, 'index']);
 });
@@ -112,4 +113,29 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/pemetaan/{id}', [PemetaanController::class, 'destroy']);
 });
 
+// =================== DATA UNTUK CHART ===================
+Route::get('/chart-data', function () {
+    return DB::table('pemetaans')
+        ->select('business', DB::raw('COUNT(*) as total'))
+        ->groupBy('business')
+        ->pluck('total', 'business');
+});
 
+Route::get('/status-counts', function () {
+    return [
+        'approve' => DB::table('pemetaans')->where('status', 'approve')->count(),
+        'process' => DB::table('pemetaans')->where('status', 'process')->count(),
+        'rejected' => DB::table('pemetaans')->where('status', 'rejected')->count(),
+    ];
+});
+
+// =================== DATA UNTUK TENTANG ===================
+// Route khusus Admin
+Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('tentang', AdminTentangUmkmController::class);
+});
+
+// Route khusus User (hanya bisa lihat)
+Route::middleware('auth:web')->group(function () {
+    Route::get('/tentang-umkm', [UserTentangUmkmController::class, 'index'])->name('tentang-umkm');
+});

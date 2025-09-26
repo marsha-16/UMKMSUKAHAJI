@@ -64,14 +64,10 @@
                         <h1 class="text-white font-weight-bold">UMKM Sukahaji</h1>
                         <p class="text-white font-weight-bold">Media informasi untuk mengenal, mendukung, dan memajukan UMKM di Kelurahan Sukahaji</p>
                     </div>
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="mt-3">
+                        <a href="{{ route('auth.login') }}" class="btn btn-primary">
                             LOGIN
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" href="{{ route('auth.login') }}">Login User</a></li>
-                            <li><a class="dropdown-item" href="{{ route('auth.loginAdmin') }}">Login Admin</a></li>
-                        </ul>
+                        </a>
                     </div>
                     
                 </div>

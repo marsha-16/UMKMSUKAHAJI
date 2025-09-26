@@ -12,34 +12,41 @@ use Illuminate\Validation\Rule;
 
 class PemetaanController extends Controller
 {
-    public function index(Request $request)
-    {
-        $umkmId = Auth::user()->umkm->id ?? null;
-    
-        $pemetaans = Pemetaan::query();
-    
-        // Kalau role USER → hanya tampilkan aduan miliknya
-        if (auth('web')->check() && $umkmId) {
-            $pemetaans->where('umkm_id', $umkmId);
-        }
-    
-        // Kalau guard "admin"
-        if (auth('admin')->check() && $request->filled('umkm_id')) {
-            $pemetaans->where('umkm_id', $request->umkm_id);
-        }
-    
-        $pemetaans = $pemetaans->latest()->paginate(5);
-    
-        // Hitung jumlah status process
-        $processCount = 0;
-        if ($umkmId) {
-            $processCount = Pemetaan::where('umkm_id', $umkmId)
-                ->where('status', 'process')
-                ->count();
-        }
-    
-        return view('pages.pemetaan.index', compact('pemetaans', 'processCount'));
+public function index(Request $request)
+{
+    $umkmId = Auth::user()->umkm->id ?? null;
+
+    $pemetaans = Pemetaan::query();
+
+    // Kalau role USER → hanya tampilkan aduan miliknya
+    if (auth('web')->check() && $umkmId) {
+        $pemetaans->where('umkm_id', $umkmId);
     }
+
+    // Kalau guard "admin" → bisa filter umkm_id
+    if (auth('admin')->check() && $request->filled('umkm_id')) {
+        $pemetaans->where('umkm_id', $request->umkm_id);
+    }
+
+    // === Filter berdasarkan status dari dashboard ===
+    $status = $request->get('status'); // ambil dari query string
+    if ($status && $status !== 'all') {
+        $pemetaans->where('status', $status);
+    }
+
+    $pemetaans = $pemetaans->latest()->paginate(5);
+
+    // Hitung jumlah status process (khusus user)
+    $processCount = 0;
+    if ($umkmId) {
+        $processCount = Pemetaan::where('umkm_id', $umkmId)
+            ->where('status', 'process')
+            ->count();
+    }
+
+    return view('pages.pemetaan.index', compact('pemetaans', 'processCount', 'status'));
+}
+
     
 
 
