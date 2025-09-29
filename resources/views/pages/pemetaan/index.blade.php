@@ -28,28 +28,32 @@
     </div>
     <div class="container">
 
-        {{-- Flash Messages --}}
-        @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show mt-3 d-flex justify-content-between align-items-center" role="alert">
-            <span>{{ session('success') }}</span>
-        </div>        
-        @endif
-    
-        @if (session('error'))
-        <div class="alert alert-success alert-dismissible fade show mt-3 d-flex justify-content-between align-items-center" role="alert">
-            <span>{{ session('error') }}</span>
-        </div>        
-        @endif
-    
-        {{-- Auto close after 3s --}}
-        <script>
-            setTimeout(() => {
-                document.querySelectorAll('.alert').forEach((alert) => {
-                    let bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                });
-            }, 3000);
-        </script>
+        {{-- Flash Messages dengan SweetAlert2 --}}
+@if (session('success'))
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'OK',
+            });
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '{{ session('error') }}',
+                confirmButtonText: 'Tutup',
+            });
+        });
+    </script>
+@endif
     </div>
 
     {{-- Table --}}
@@ -184,7 +188,7 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const { DateTime } = luxon;

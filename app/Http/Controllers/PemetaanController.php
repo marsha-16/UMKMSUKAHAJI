@@ -100,7 +100,7 @@ public function index(Request $request)
 
         $pemetaan->save();
 
-        return redirect('/pemetaan')->with('success', 'Berhasil Membuat UMKM');
+        return redirect('/pemetaan')->with('success', 'Data UMKM Anda telah berhasil dibuat. Silakan bergabung dengan komunitas UMKM kami melalui grup WhatsApp untuk mendapatkan informasi dan dukungan lebih lanjut. Anda dapat menemukan link grup WhatsApp di halaman Tentang UMKM.');
     }
 
     public function edit($id)

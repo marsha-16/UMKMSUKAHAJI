@@ -11,10 +11,10 @@
     <div class="row mb-4">
         @php
             $statusCards = [
-                ['id' => 'totalApprove', 'label' => '✅ Diterima',  'color' => 'text-white', 'status' => 'approve'],
-                ['id' => 'totalProcess', 'label' => '⏳ Diproses',  'color' => 'text-white', 'status' => 'process'],
-                ['id' => 'totalRejected', 'label' => '❌ Ditolak',  'color' => 'text-white', 'status' => 'rejected'],
-                ['id' => 'totalAll', 'label' => '📊 Total',  'color' => 'text-white', 'status' => 'all'],
+                ['id' => 'totalApprove', 'label' => '✅ Diterima',  'status' => 'approve'],
+                ['id' => 'totalProcess', 'label' => '⏳ Diproses',  'status' => 'process'],
+                ['id' => 'totalRejected', 'label' => '❌ Ditolak',  'status' => 'rejected'],
+                ['id' => 'totalAll', 'label' => '📊 Total',  'status' => 'all'],
             ];
         @endphp
 
@@ -34,37 +34,38 @@
     </div>
 
     <div class="row justify-content-center">
-    <div class="col-lg-10 col-md-12">
-        <div class="card shadow border-0">
-            <div class="card-header bg-white text-center">
-                <h6 class="m-0 font-weight-bold text-primary">Diagram Jenis Usaha</h6>
-            </div>
-            <div class="card-body">
-                <div class="row align-items-center">
-                    
-                    <!-- Lingkaran (Kiri) -->
-                    <div class="col-md-6 text-center mb-3 mb-md-0">
-                        <div style="max-width:360px; margin:auto;">
-                            <canvas id="usahaPieChart" height="240"></canvas>
+        <div class="col-lg-10 col-md-12">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white text-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Diagram Jenis Usaha</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        
+                        <!-- Pie Chart -->
+                        <div class="col-md-6 text-center mb-3 mb-md-0">
+                            <div style="max-width:360px; margin:auto;">
+                                <canvas id="usahaPieChart" height="240"></canvas>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- Tabel (Kanan) -->
-                    <div class="col-md-6">
-                        <h6 class="text-center mb-3">Detail Jumlah per Jenis Usaha</h6>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered text-center mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Jenis Usaha</th>
-                                        <th>Jumlah</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usahaTableBody"></tbody>
-                            </table>
+                        
+                        <!-- Table -->
+                        <div class="col-md-6">
+                            <h6 class="text-center mb-3">Detail Jumlah per Jenis Usaha</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered text-center mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Jenis Usaha</th>
+                                            <th>Jumlah</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usahaTableBody"></tbody>
+                                </table>
+                            </div>
                         </div>
+                        
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -151,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Ambil data jenis usaha
-    fetch("{{ url('/chart-data') }}")
+    fetch("{{ route('chart.data') }}")
         .then(response => response.json())
         .then(data => {
             const labels = Object.keys(data);
@@ -196,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
     // Ambil data status
-    fetch("{{ url('/status-counts') }}")
+    fetch("{{ route('status.counts') }}")
         .then(response => response.json())
         .then(data => {
             ["totalApprove","totalProcess","totalRejected","totalAll"].forEach(id => {
@@ -212,18 +213,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
     // Klik kartu -> redirect ke pemetaan dengan filter status
-document.querySelectorAll('.status-card').forEach(card => {
-    card.addEventListener('click', () => {
-        let status = card.dataset.status;
-        let url = "{{ url('/pemetaan') }}";
+    document.querySelectorAll('.status-card').forEach(card => {
+        card.addEventListener('click', () => {
+            let status = card.dataset.status;
+            let url = "{{ url('/pemetaan') }}";
 
-        if (status !== 'all') {
-            url += `?status=${status}`;
-        }
+            if (status !== 'all') {
+                url += `?status=${status}`;
+            }
 
-        window.location.href = url;
+            window.location.href = url;
+        });
     });
-});
 });
 </script>
 @endpush

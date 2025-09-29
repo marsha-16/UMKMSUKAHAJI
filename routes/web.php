@@ -115,19 +115,22 @@ Route::middleware('auth:web')->group(function () {
 
 // =================== DATA UNTUK CHART ===================
 Route::get('/chart-data', function () {
-    return DB::table('pemetaans')
+    $data = DB::table('pemetaans')
         ->select('business', DB::raw('COUNT(*) as total'))
         ->groupBy('business')
         ->pluck('total', 'business');
-});
+
+    return response()->json($data);
+})->name('chart.data');
 
 Route::get('/status-counts', function () {
-    return [
+    return response()->json([
         'approve' => DB::table('pemetaans')->where('status', 'approve')->count(),
         'process' => DB::table('pemetaans')->where('status', 'process')->count(),
         'rejected' => DB::table('pemetaans')->where('status', 'rejected')->count(),
-    ];
-});
+    ]);
+})->name('status.counts');
+
 
 // =================== DATA UNTUK TENTANG ===================
 // Route khusus Admin
