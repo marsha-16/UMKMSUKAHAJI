@@ -94,14 +94,13 @@ Route::middleware('auth:admin')->group(function () {
 
 // =================== ADMIN & USER ===================
 Route::middleware(['auth:admin,web'])->group(function () {
-    Route::get('/profile', [UserController::class, 'profile_view']);
-    Route::post('/profile/{id}', [UserController::class, 'update_profile']);
-    Route::get('/change-password', [UserController::class, 'change_password_view']);
-    Route::post('/change-password/{id}', [UserController::class, 'change_password']);
+    Route::get('/profile', [UserController::class, 'profile_view'])->name('profile');
+    Route::post('/profile/{id}', [UserController::class, 'update_profile'])->name('profile.update');
 
-    // Route::get('/search', [SearchController::class, 'index'])->name('search');
+    Route::get('/change-password', [UserController::class, 'change_password_view'])->name('password');
+    Route::post('/change-password/{id}', [UserController::class, 'change_password'])->name('password.update');
 
-    Route::get('/pemetaan', [PemetaanController::class, 'index']);
+    Route::get('/pemetaan', [PemetaanController::class, 'index'])->name('pemetaan');
 });
 
 // =================== USER ONLY ===================
