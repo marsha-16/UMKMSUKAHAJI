@@ -12,6 +12,8 @@ use App\Http\Controllers\User\TentangUmkmController as UserTentangUmkmController
 use App\Http\Controllers\Admin\TentangUmkmController as AdminTentangUmkmController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\BackgroundController;
+
 
 // =================== HALAMAN UTAMA ===================
 Route::get('/', function () {
@@ -140,4 +142,8 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 // Route khusus User (hanya bisa lihat)
 Route::middleware('auth:web')->group(function () {
     Route::get('/tentang-umkm', [UserTentangUmkmController::class, 'index'])->name('tentang-umkm');
+});
+
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('backgrounds', BackgroundController::class)->only(['index','store','update','destroy']);
 });

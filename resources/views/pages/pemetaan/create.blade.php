@@ -120,8 +120,25 @@
                         @enderror
                     </div>
 
-                </div>
+                    <!-- Upload Foto Dokumen -->
+                    <div class="form">
+                        <label for="document_photo" class="d-block">Upload Foto Dokumen</label>
+                        <!-- preview foto -->
+                        <img id="preview-image" 
+                            src="{{ asset('images/default.png') }}" 
+                            alt="Preview Foto" 
+                            class="img-thumbnail mb-2" 
+                            style="max-width: 200px; display: none;">
 
+                        <input type="file" name="document_photo" id="document_photo"
+                            class="form-control-file mt-2 @error('document_photo') is-invalid @enderror"
+                            accept="image/*">
+
+                        @error('document_photo')
+                            <span class="invalid-feedback d-block">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
                 <!-- Footer sejajar tombol -->
                 <div class="card-footer d-flex justify-content-between align-items-center">
                     <div style="gap:10px;">
@@ -133,4 +150,21 @@
         </form>
     </div>
 </div>
+<!-- script preview -->
+<script>
+    document.getElementById("document_photo").addEventListener("change", function (event) {
+        let input = event.target;
+        let reader = new FileReader();
+
+        reader.onload = function () {
+            let preview = document.getElementById("preview-image");
+            preview.src = reader.result;
+            preview.style.display = "block";
+        };
+
+        if (input.files && input.files[0]) {
+            reader.readAsDataURL(input.files[0]);
+        }
+    });
+</script>
 @endsection

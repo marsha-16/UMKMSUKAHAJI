@@ -25,10 +25,10 @@
             <div class="container">
                 <!-- Logo + Nama Kelurahan -->
                 <a class="navbar-brand d-flex align-items-center" href="#page-top">
-                    <img src="{{ asset('images/logo.sukahaji.png') }}" 
-                        alt="Logo Kelurahan" 
+                    <img src="{{ asset('images/logo.png') }}" 
+                        alt="Logo UMKM" 
                         style="height:40px; margin-right:10px;">
-                    <span class="fw-bold">Kelurahan Sukahaji</span>
+                    <span class="fw-bold">UMKM Sukahaji, Go Digital</span>
                 </a>
 
                 <!-- Toggler Offcanvas -->
@@ -56,21 +56,26 @@
         </nav>
         
         <!-- Masthead-->
-        <header class="masthead" id="home">
-            <div class="container px-4 px-lg-5 h-100">
-                <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
-                    <div class="col-lg-8 align-self-end">
-                        <h1 class="text-white font-weight-bold">Selamat Datang</h1>
-                        <h1 class="text-white font-weight-bold">UMKM Sukahaji</h1>
-                        <p class="text-white font-weight-bold">Media informasi untuk mengenal, mendukung, dan memajukan UMKM di Kelurahan Sukahaji</p>
-                    </div>
-                    <div class="mt-3">
-                        <a href="{{ route('auth.login') }}" class="btn btn-primary">
-                            LOGIN
-                        </a>
-                    </div>
-                    
+        <header class="masthead">
+        <div id="bgCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+            @foreach(\App\Models\Background::all() as $key => $bg)
+                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                <div class="d-block w-100" 
+                    style="background: url('{{ asset($bg->image) }}') center/cover no-repeat; height:100vh;">
                 </div>
+                </div>
+            @endforeach
+            </div>
+        </div>
+
+            <div class="container text-center text-white" style="position: absolute; top:40%; left:0; right:0;">
+                <h1>Selamat Datang</h1>
+                <h1>UMKM Sukahaji</h1>
+                <p>Media informasi untuk mengenal, mendukung, dan memajukan UMKM di Kelurahan Sukahaji</p>
+                    <a href="{{ route('auth.login') }}" class="btn btn-primary">
+                        LOGIN
+                    </a>
             </div>
         </header>
         <!-- About-->

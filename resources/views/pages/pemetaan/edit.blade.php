@@ -233,6 +233,24 @@
                             @enderror
                         </div>
 
+                        <!-- Upload Foto Dokumen -->
+                        <div class="form">
+                            <label for="document_photo" class="d-block">Upload Foto Dokumen</label>
+
+                            @if ($pemetaan->document_photo)
+                                <img src="{{ asset($pemetaan->document_photo) }}" 
+                                    alt="Foto Dokumen" 
+                                    class="img-thumbnail mb-2" 
+                                    style="max-width: 200px;">
+                            @endif
+
+                            <input type="file" name="document_photo" id="document_photo"
+                                class="form-control-file mt-2 @error('document_photo') is-invalid @enderror">
+
+                            @error('document_photo')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                     <!-- Footer sejajar tombol -->
                     <div class="card-footer d-flex justify-content-between align-items-center">

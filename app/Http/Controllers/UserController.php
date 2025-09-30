@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -63,53 +62,55 @@ class UserController extends Controller
         ]);
     }
 
-   public function profile_view()
-{
-    if (Auth::guard('admin')->check()) {
-        $user = Auth::guard('admin')->user();
-    } else {
-        $user = Auth::guard('web')->user();
+    public function profile_view()
+    {
+        if (Auth::guard('admin')->check()) {
+            $user = Auth::guard('admin')->user();
+        } else {
+            $user = Auth::guard('web')->user();
+        }
+
+        return view('pages.profile.index', compact('user'));
     }
 
-    return view('pages.profile.index', compact('user'));
-}
+    public function update_profile(Request $request, $userId)
+    {
+        if (Auth::guard('admin')->check()) {
+            $user = Admin::findOrFail($userId);
+        } else {
+            $user = User::findOrFail($userId);
+        }
 
-public function update_profile(Request $request, $userId)
-{
-    if (Auth::guard('admin')->check()) {
-        $user = Admin::findOrFail($userId);
-    } else {
-        $user = User::findOrFail($userId);
+        $request->validate([
+            'name'  => 'required|min:3',
+            'email' => 'required|email',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $user->name  = $request->name;
+        $user->email = $request->email;
+
+        // Upload foto
+        if ($request->hasFile('photo')) {
+            $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/uploads';
+
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
+            $request->file('photo')->move($uploadPath, $fileName);
+
+            $user->photo = 'uploads/' . $fileName;
+        } elseif (!$user->photo) {
+            // kalau belum ada foto, pakai default
+            $user->photo = 'images/default.png';
+        }
+
+        $user->save();
+
+        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui');
     }
-
-    $request->validate([
-        'name' => 'required|min:3',
-        'email' => 'required|email',
-        'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
-
-    $user->name = $request->name;
-    $user->email = $request->email;
-
-    // Upload foto
-    if ($request->hasFile('photo')) {
-        $fileName = time() . '.' . $request->photo->extension();
-
-        // simpan langsung ke public/uploads
-        $request->photo->move(public_path('uploads'), $fileName);
-
-        // simpan path relatif ke database
-        $user->photo = 'uploads/' . $fileName;
-    } elseif (!$user->photo) {
-        // kalau belum ada foto, pakai default
-        $user->photo = 'images/default.png';
-    }
-
-    $user->save();
-
-    return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui');
-}
-
 
     public function change_password_view()
     {

@@ -23,6 +23,11 @@
                 'icon' => 'fas fa-fw fa-scroll',
             ],
             (object) [
+                'title' => 'Masthead',
+                'path' => 'admin/backgrounds',
+                'icon' => 'fas fa-fw fa-home',
+            ],
+            (object) [
                 'title' => 'Akun',
                 'icon' => 'fas fa-fw fa-user-shield',
                 'children' => [

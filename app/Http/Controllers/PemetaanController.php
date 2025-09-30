@@ -47,9 +47,6 @@ public function index(Request $request)
     return view('pages.pemetaan.index', compact('pemetaans', 'processCount', 'status'));
 }
 
-    
-
-
     public function create()
     {
 
@@ -72,18 +69,19 @@ public function index(Request $request)
             'business' => ['required', Rule::in([
                 'Warung Kelontong', 'Makanan dan Minuman', 'Sayur Mayur dan Daging',
                 'Pakaian', 'Jajanan Pasar', 'Jasa Fotocopy',
-                'Servis Elektronik', 'Jasa Sumur Bor', 'Kaligrafi', 'Air Isi Ulang', 
+                'Servis Elektronik', 'Jasa Sumur Bor', 'Kaligrafi', 'Air Isi Ulang',
                 'Jasa Tenaga', 'Refill Parfum', 'Olahraga dan Hiburan', 'Jual Beli Hewan Ternak',
                 'Buah-Buahan', 'Home Industri', 'Konter Handphone', 'Accessories'
             ])],
             'marketing' => ['required', Rule::in(['Tunai', 'Online'])],
             'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
             'document' => ['required', Rule::in(['Nomor Induk Berusaha', 'Sertifikat Halal', 'Pangan Industri Rumah Tangga', 'Belum Punya', 'Dalam Proses'])],
+            'document_photo' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
         ]);
 
         $umkm = Auth::user()->umkm;
 
-        if(!$umkm) {
+        if (!$umkm) {
             return redirect('/pemetaan')->with('error', 'Akun anda belum terhubung dengan data penduduk manapun');
         }
 
@@ -98,9 +96,27 @@ public function index(Request $request)
         $pemetaan->promotion = $request->input('promotion');
         $pemetaan->document = $request->input('document');
 
+        // STORE
+        if ($request->hasFile('document_photo')) {
+            $uploadPath = $_SERVER['DOCUMENT_ROOT'].'/uploads/documents';
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            $file = $request->file('document_photo');
+            $fileName = time().'.'.$file->getClientOriginalExtension();
+
+            $file->move($uploadPath, $fileName);
+
+            $pemetaan->document_photo = 'uploads/documents/'.$fileName;
+            $pemetaan->document_original_name = $file->getClientOriginalName(); // ⬅️ simpan nama asli
+        } elseif (!$pemetaan->document_photo) {
+            $pemetaan->document_photo = 'images/default.png';
+        }
+
         $pemetaan->save();
 
-        return redirect('/pemetaan')->with('success', 'Data UMKM Anda telah berhasil dibuat. Silakan bergabung dengan komunitas UMKM kami melalui grup WhatsApp untuk mendapatkan informasi dan dukungan lebih lanjut. Anda dapat menemukan link grup WhatsApp di halaman Tentang UMKM.');
+        return redirect('/pemetaan')->with('success', 'Data UMKM berhasil dibuat.');
     }
 
     public function edit($id)
@@ -132,24 +148,23 @@ public function index(Request $request)
             'business' => ['required', Rule::in([
                 'Warung Kelontong', 'Makanan dan Minuman', 'Sayur Mayur dan Daging',
                 'Pakaian', 'Jajanan Pasar', 'Jasa Fotocopy',
-                'Servis Elektronik', 'Jasa Sumur Bor', 'Kaligrafi'
+                'Servis Elektronik', 'Jasa Sumur Bor', 'Kaligrafi', 'Air Isi Ulang',
+                'Jasa Tenaga', 'Refill Parfum', 'Olahraga dan Hiburan', 'Jual Beli Hewan Ternak',
+                'Buah-Buahan', 'Home Industri', 'Konter Handphone', 'Accessories'
             ])],
             'marketing' => ['required', Rule::in(['Tunai', 'Online'])],
             'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
             'document' => ['required', Rule::in(['Nomor Induk Berusaha', 'Sertifikat Halal', 'Pangan Industri Rumah Tangga', 'Belum Punya', 'Dalam Proses'])],
+            'document_photo' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
         ]);
 
         $umkm = Auth::user()->umkm;
 
-        if(!$umkm) {
+        if (!$umkm) {
             return redirect('/pemetaan')->with('error', 'Akun anda belum terhubung dengan data penduduk manapun');
         }
 
         $pemetaan = Pemetaan::findOrFail($id);
-
-        if ($pemetaan->status != 'process') {
-            return redirect('/pemetaan')->with('error', "Gagal mengubah data UMKM");
-        }
 
         $pemetaan->umkm_id = $umkm->id;
         $pemetaan->name = $request->input('name');
@@ -160,6 +175,32 @@ public function index(Request $request)
         $pemetaan->marketing = $request->input('marketing');
         $pemetaan->promotion = $request->input('promotion');
         $pemetaan->document = $request->input('document');
+
+        // UPDATE
+        if ($request->hasFile('document_photo')) {
+            $uploadPath = $_SERVER['DOCUMENT_ROOT'].'/uploads/documents';
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            // hapus foto lama (kecuali default)
+            if ($pemetaan->document_photo && $pemetaan->document_photo !== 'images/default.png') {
+                $oldFile = $_SERVER['DOCUMENT_ROOT'].'/'.$pemetaan->document_photo;
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
+            }
+
+            $file = $request->file('document_photo');
+            $fileName = time().'.'.$file->getClientOriginalExtension();
+
+            $file->move($uploadPath, $fileName);
+
+            $pemetaan->document_photo = 'uploads/documents/'.$fileName;
+            $pemetaan->document_original_name = $file->getClientOriginalName(); // ⬅️ simpan nama asli
+        } elseif (!$pemetaan->document_photo) {
+            $pemetaan->document_photo = 'images/default.png';
+        }
 
         $pemetaan->save();
 

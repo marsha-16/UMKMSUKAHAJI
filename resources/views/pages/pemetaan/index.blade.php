@@ -75,6 +75,7 @@
                                 <th>Jenis Pemasaran</th>
                                 <th>Platform Digital</th>
                                 <th>Dokumen Penunjang</th>
+                                <th>Foto Dokumen</th>
                                 <th>Tanggal Laporan</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -103,10 +104,49 @@
                                     <td>{{ $item->marketing }}</td>
                                     <td>{{ $item->promotion }}</td>
                                     <td>{{ $item->document }}</td>
+                                    <td class="text-center align-middle">
+                                        @if ($item->document_photo)
+                                            @php
+                                                $extension = strtolower(pathinfo($item->document_photo, PATHINFO_EXTENSION));
+                                                $fileName = basename($item->document_photo);
+                                            @endphp
+
+                                            @if (in_array($extension, ['jpg','jpeg','png','gif','webp']))
+                                                <!-- Kalau gambar -->
+                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                    <img src="{{ asset($item->document_photo) }}" 
+                                                        alt="Foto Dokumen" 
+                                                        class="img-thumbnail" 
+                                                        style="max-width: 120px;">
+                                                </a>
+                                            @elseif ($extension === 'pdf')
+                                                <!-- Kalau PDF -->
+                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                    <i class="fa-solid fa-file-pdf fa-3x text-danger"></i>
+                                                </a>
+                                            @elseif (in_array($extension, ['doc','docx']))
+                                                <!-- Kalau Word -->
+                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                    <i class="fa-solid fa-file-word fa-3x text-primary"></i>
+                                                </a>
+                                            @elseif (in_array($extension, ['xls','xlsx']))
+                                                <!-- Kalau Excel -->
+                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                    <i class="fa-solid fa-file-excel fa-3x text-success"></i>
+                                                </a>
+                                            @else
+                                                <!-- Default file icon -->
+                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                    <i class="fa-solid fa-file fa-3x text-secondary"></i>
+                                                </a>
+                                            @endif
+                                        @else
+                                            <span class="text-muted">Belum ada</span>
+                                        @endif
+                                    </td>
                                     <td data-report-date="{{ \Carbon\Carbon::parse($item->report_date)->toIso8601String() }}">
                                         {{ $item->report_date_label }}
                                     </td>
-
                                     <td>
                                         <span class="badge badge-{{ $item->status_color }}">{{ $item->status_label }}</span>
                                     </td>
@@ -145,7 +185,7 @@
                     @endif
                     </table>
                 </div>
-               @if ($pemetaans->lastPage() > 1)
+                @if ($pemetaans->lastPage() > 1)
                     <div style="margin: 10px 20px 40px 20px; display: flex; justify-content: space-between; align-items: center;">
                         
                         {{-- Info jumlah data --}}
