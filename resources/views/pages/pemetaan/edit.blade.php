@@ -234,23 +234,32 @@
                         </div>
 
                         <!-- Upload Foto Dokumen -->
-                        <div class="form">
-                            <label for="document_photo" class="d-block">Upload Foto Dokumen</label>
+<div class="form">
+    <label for="document_photo" class="d-block">Upload Foto Dokumen</label>
 
-                            @if ($pemetaan->document_photo)
-                                <img src="{{ asset($pemetaan->document_photo) }}" 
-                                    alt="Foto Dokumen" 
-                                    class="img-thumbnail mb-2" 
-                                    style="max-width: 200px;">
-                            @endif
+    @if ($pemetaan->document_photo)
+        <img id="previewImage" 
+             src="{{ asset($pemetaan->document_photo) }}" 
+             alt="Foto Dokumen" 
+             class="img-thumbnail mb-2" 
+             style="max-width: 200px;">
+    @else
+        <img id="previewImage" 
+             src="https://via.placeholder.com/200x150?text=Belum+Ada+Foto" 
+             alt="Foto Dokumen" 
+             class="img-thumbnail mb-2" 
+             style="max-width: 200px;">
+    @endif
 
-                            <input type="file" name="document_photo" id="document_photo"
-                                class="form-control-file mt-2 @error('document_photo') is-invalid @enderror">
+    <input type="file" name="document_photo" id="document_photo"
+        class="form-control-file mt-2 @error('document_photo') is-invalid @enderror"
+        accept="image/*" onchange="previewFile(event)">
 
-                            @error('document_photo')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
+    @error('document_photo')
+        <span class="invalid-feedback d-block">{{ $message }}</span>
+    @enderror
+</div>
+
                     </div>
                     <!-- Footer sejajar tombol -->
                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -263,4 +272,21 @@
             </form>
         </div>
     </div>
+
+    <script>
+function previewFile(event) {
+    const input = event.target;
+    const file = input.files[0];
+    const preview = document.getElementById('previewImage');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result; // ganti src jadi file baru
+        }
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+
 @endsection
