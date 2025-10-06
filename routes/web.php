@@ -11,6 +11,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\User\TentangUmkmController as UserTentangUmkmController;
 use App\Http\Controllers\Admin\TentangUmkmController as AdminTentangUmkmController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\KatalogController as AdminKatalogController;
+use App\Http\Controllers\User\KatalogController as UserKatalogController;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\BackgroundController;
 
@@ -112,6 +114,9 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/pemetaan/{id}', [PemetaanController::class, 'edit']);
     Route::put('/pemetaan/{id}', [PemetaanController::class, 'update']);
     Route::delete('/pemetaan/{id}', [PemetaanController::class, 'destroy']);
+
+    Route::get('/katalog-user', [UserKatalogController::class, 'index'])->name('katalog.index');
+    Route::get('/katalog-user/{id}', [UserKatalogController::class, 'show'])->name('katalog.show');
 });
 
 // =================== DATA UNTUK CHART ===================
@@ -147,3 +152,10 @@ Route::middleware('auth:web')->group(function () {
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('backgrounds', BackgroundController::class)->only(['index','store','update','destroy']);
 });
+
+// ================= ADMIN =================
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('katalog', AdminKatalogController::class);
+});
+
+

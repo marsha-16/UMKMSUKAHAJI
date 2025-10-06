@@ -2,96 +2,101 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">Kelola Background</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">Kelola Background</h2>
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addModal">
+            <i class="fas fa-plus-circle me-1"></i> Tambah Foto
+        </button>
+    </div>
 
-    <!-- Button trigger modal tambah -->
-    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
-        + Tambah Foto
-    </button>
-
-    <!-- Tabel -->
-    <div class="table-responsive">
-        <table class="table table-bordered align-middle text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th style="width: 60px;">No</th>
-                    <th style="width: 200px;">Image</th>
-                    <th style="width: 200px;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($backgrounds as $index => $bg)
-                <tr>
-                    <td>{{ $index+1 }}</td>
-                    <td>
-                        <img src="{{ asset($bg->image) }}" class="img-thumbnail" width="180" alt="bg-{{ $bg->id }}">
-                    </td>
-                    <td>
-                        <!-- Tombol Edit (type button agar tidak submit form lain) -->
-                        <button type="button" class="btn btn-warning btn-sm mb-1"
-                                data-bs-toggle="modal" data-bs-target="#editModal{{ $bg->id }}">
-                            ✏️ Edit
-                        </button>
-
-                        <!-- Tombol Delete -->
-                        <form action="{{ route('admin.backgrounds.destroy', $bg->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus foto ini?')">
-                                🗑️ Hapus
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="3">Belum ada background yang diupload</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead style="background: linear-gradient(90deg, #dc3545, #fd7e14, #ffc107); color: white;">
+                        <tr>
+                            <th style="width: 60px;">No</th>
+                            <th>Image</th>
+                            <th style="width: 200px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($backgrounds as $index => $bg)
+                        <tr>
+                            <td>{{ $index+1 }}</td>
+                            <td>
+                                <img src="{{ asset($bg->image) }}" 
+                                     class="img-thumbnail rounded shadow-sm" 
+                                     style="width:180px; height:100px; object-fit:cover;" 
+                                     alt="bg-{{ $bg->id }}">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm text-white mb-1" 
+                                        style="background-color:#fd7e14;"
+                                        data-bs-toggle="modal" data-bs-target="#editModal{{ $bg->id }}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <form action="{{ route('admin.backgrounds.destroy', $bg->id) }}" method="POST" style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Yakin hapus foto ini?')">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="3" class="text-muted">Belum ada background yang diupload</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Modal Tambah (boleh tetap di sini) -->
+<!-- Modal Tambah -->
 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <form action="{{ route('admin.backgrounds.store') }}" method="POST" enctype="multipart/form-data" class="modal-content">
             @csrf
-            <div class="modal-header">
-                <h5 class="modal-title" id="addModalLabel">Tambah Background</h5>
+            <div class="modal-header" style="background-color:#ffc107;">
+                <h5 class="modal-title text-dark" id="addModalLabel">Tambah Background</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center">
-                <img src="https://via.placeholder.com/300x150?text=Preview" class="img-fluid mb-3 rounded" id="preview-add">
+                <img src="https://via.placeholder.com/600x300?text=Preview" class="img-fluid mb-3 rounded shadow-sm" id="preview-add" style="max-height: 250px; object-fit: cover;">
                 <input type="file" name="image" class="form-control" required onchange="previewImage(event, 'preview-add')">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary">Upload</button>
+                <button type="submit" class="btn btn-warning">Upload</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- --- Semua Modal Edit dipanggil DI LUAR tabel agar tidak bentrok --- -->
+<!-- Modal Edit -->
 @foreach($backgrounds as $bg)
 <div class="modal fade" id="editModal{{ $bg->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $bg->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <form action="{{ route('admin.backgrounds.update', $bg->id) }}" method="POST" enctype="multipart/form-data" class="modal-content">
             @csrf
             @method('PUT')
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel{{ $bg->id }}">Edit Background</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header" style="background-color:#fd7e14;">
+                <h5 class="modal-title text-white" id="editModalLabel{{ $bg->id }}">Edit Background</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center">
-                <img src="{{ asset($bg->image) }}" class="img-fluid mb-3 rounded" id="preview-edit-{{ $bg->id }}">
-                <input type="file" name="image" class="form-control" onchange="previewImage(event, 'preview-edit-{{ $bg->id }}')">
+                <img src="{{ asset($bg->image) }}" class="img-fluid mb-3 rounded shadow-sm" id="preview-edit-{{ $bg->id }}" style="max-height: 250px; object-fit: cover;">
+                <input type="file" name="image" class="form-control mt-2" onchange="previewImage(event, 'preview-edit-{{ $bg->id }}')">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-warning">Simpan</button>
             </div>
         </form>
     </div>

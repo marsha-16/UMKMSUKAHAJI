@@ -23,9 +23,14 @@
                 'icon' => 'fas fa-fw fa-scroll',
             ],
             (object) [
+                'title' => 'Katalog',
+                'path' => 'admin/katalog',
+                'icon' => 'fas fa-fw fa-shopping-cart',
+            ],
+            (object) [
                 'title' => 'Masthead',
                 'path' => 'admin/backgrounds',
-                'icon' => 'fas fa-fw fa-home',
+                'icon' => 'fas fa-layer-group',
             ],
             (object) [
                 'title' => 'Akun',
@@ -73,6 +78,11 @@
                 'title' => 'Pemetaan UMKM Sukahaji',
                 'path' => 'pemetaan',
                 'icon' => 'fas fa-fw fa-scroll',
+            ],
+            (object) [
+                'title' => 'Katalog',
+                'path' => 'katalog-user',
+                'icon' => 'fas fa-fw fa-shopping-cart',
             ],
             (object) [
                 'title' => 'Profil',
