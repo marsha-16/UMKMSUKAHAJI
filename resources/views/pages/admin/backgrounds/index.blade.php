@@ -39,8 +39,7 @@
                                 <form action="{{ route('admin.backgrounds.destroy', $bg->id) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Yakin hapus foto ini?')">
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $bg->id }}">
                                         <i class="fas fa-trash"></i> Hapus
                                     </button>
                                 </form>
@@ -63,9 +62,11 @@
     <div class="modal-dialog modal-lg">
         <form action="{{ route('admin.backgrounds.store') }}" method="POST" enctype="multipart/form-data" class="modal-content">
             @csrf
-            <div class="modal-header" style="background-color:#ffc107;">
-                <h5 class="modal-title text-dark" id="addModalLabel">Tambah Background</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header d-flex justify-content-between align-items-center" style="background-color:#ffc107;">
+                <h5 class="modal-title text-dark mb-0" id="addModalLabel">Tambah Background</h5>
+                <button type="button" class="btn text-dark fs-4" data-bs-dismiss="modal" style="border:none; background:none;">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body text-center">
                 <img src="https://via.placeholder.com/600x300?text=Preview" class="img-fluid mb-3 rounded shadow-sm" id="preview-add" style="max-height: 250px; object-fit: cover;">
@@ -86,9 +87,11 @@
         <form action="{{ route('admin.backgrounds.update', $bg->id) }}" method="POST" enctype="multipart/form-data" class="modal-content">
             @csrf
             @method('PUT')
-            <div class="modal-header" style="background-color:#fd7e14;">
-                <h5 class="modal-title text-white" id="editModalLabel{{ $bg->id }}">Edit Background</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-header d-flex justify-content-between align-items-center" style="background-color:#fd7e14;">
+                <h5 class="modal-title text-white mb-0" id="editModalLabel{{ $bg->id }}">Edit Background</h5>
+                <button type="button" class="btn text-white fs-4" data-bs-dismiss="modal" style="border:none; background:none;">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body text-center">
                 <img src="{{ asset($bg->image) }}" class="img-fluid mb-3 rounded shadow-sm" id="preview-edit-{{ $bg->id }}" style="max-height: 250px; object-fit: cover;">
@@ -101,6 +104,32 @@
         </form>
     </div>
 </div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div class="modal fade" id="deleteModal{{ $bg->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header d-flex justify-content-between align-items-center" style="background-color:#dc3545;">
+                <h5 class="modal-title text-white mb-0">Konfirmasi Hapus</h5>
+                <button type="button" class="btn text-white fs-4" data-bs-dismiss="modal" style="border:none; background:none;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Yakin ingin menghapus foto ini?</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <form action="{{ route('admin.backgrounds.destroy', $bg->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endforeach
 
 @endsection

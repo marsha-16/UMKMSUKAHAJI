@@ -13,7 +13,7 @@ class KatalogController extends Controller
      */
     public function index()
     {
-        $katalogs = Katalog::latest()->paginate(10);
+        $katalogs = Katalog::latest()->paginate(5);
         return view('pages.admin.katalog.index', compact('katalogs'));
     }
 

@@ -25,7 +25,7 @@ class KatalogController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        $katalogs = $query->latest()->paginate(12)->withQueryString();
+        $katalogs = $query->latest()->paginate(4)->withQueryString();
         return view('pages.user.katalog.index', compact('katalogs'));
     }
 

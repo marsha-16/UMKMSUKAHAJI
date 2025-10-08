@@ -28,18 +28,19 @@
                             <label for="photo" class="d-block mb-2 font-weight-bold">Foto Profil</label>
                             @if ($user->photo)
                                 <img src="{{ asset($user->photo) }}" alt="Foto Profil"
-                                    class="rounded mb-2" width="120" height="120">
-                                    <input type="file" name="photo" id="photo"
+                                    class="rounded mb-2 shadow-sm border" width="120" height="120">
+                                <input type="file" name="photo" id="photo"
                                         class="form-control-file mt-2 @error('photo') is-invalid @enderror">
                             @else
-                                <img src="{{ asset('images/default.png') }}" alt="Default Foto"
-                                    class="rounded mb-2" width="120" height="120">
+                                <div class="d-flex justify-content-center align-items-center bg-light rounded-circle border shadow-sm mb-2 mx-auto"
+                                    style="width:120px; height:120px;">
+                                    <i class="fas fa-user text-secondary" style="font-size:50px;"></i>
+                                </div>
                             @endif
                             @error('photo')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
-                        </div>
-                        
+                        </div>                        
                         <!-- Nama -->
                         <div class="form-group mb-3">
                             <label for="name">Nama Lengkap</label>
@@ -63,12 +64,40 @@
                         </div>
                     </div>
 
-                    <div class="card-footer d-flex justify-content-end">
-                        <a href="/dashboard" class="btn btn-secondary mr-2">Kembali</a>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-end" style="gap: 10px;">
+                            @if(Auth::guard('admin')->check())
+                                <a href="/dashboardAdmin" class="btn btn-outline-secondary">
+                                    Kembali
+                                </a>
+                            @elseif(Auth::guard('web')->check())
+                                <a href="/dashboard" class="btn btn-outline-secondary">
+                                    Kembali
+                                </a>
+                            @endif
+                            <button type="submit" class="btn btn-primary">
+                                Simpan Perubahan
+                            </button>
+                        </div>
                     </div>
                 </div>
             </form>
+            @push('scripts')
+<script>
+document.getElementById('photo').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const img = document.querySelector('.form-group img');
+            if (img) img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+@endpush
+
         </div>
     </div>
 @endsection

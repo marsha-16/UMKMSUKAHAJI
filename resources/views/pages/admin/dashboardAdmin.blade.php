@@ -33,6 +33,7 @@
         @endforeach
     </div>
 
+    <!-- Diagram Jenis Usaha -->
     <div class="row justify-content-center">
         <div class="col-lg-10 col-md-12">
             <div class="card shadow border-0">
@@ -41,14 +42,14 @@
                 </div>
                 <div class="card-body">
                     <div class="row align-items-center">
-                        
+
                         <!-- Pie Chart -->
                         <div class="col-md-6 text-center mb-3 mb-md-0">
-                            <div style="max-width:360px; margin:auto;">
-                                <canvas id="usahaPieChart" height="240"></canvas>
+                            <div class="chart-container mx-auto">
+                                <canvas id="usahaPieChart"></canvas>
                             </div>
                         </div>
-                        
+
                         <!-- Table -->
                         <div class="col-md-6">
                             <h6 class="text-center mb-3">Detail Jumlah per Jenis Usaha</h6>
@@ -64,7 +65,7 @@
                                 </table>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -107,6 +108,20 @@
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+/* Responsif Chart */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 380px;  /* batas maksimum untuk desktop */
+  aspect-ratio: 1 / 1; /* menjaga bentuk bulat */
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    max-width: 280px; /* mengecil di HP */
+  }
 }
 </style>
 @endpush
@@ -164,10 +179,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
             new Chart(document.getElementById('usahaPieChart'), {
                 type: 'pie',
-                data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 1 }] },
+                data: { 
+                    labels, 
+                    datasets: [{ 
+                        data: values, 
+                        backgroundColor: colors, 
+                        borderWidth: 1 
+                    }] 
+                },
                 options: {
                     responsive: true,
-                    animation: { animateRotate: true, animateScale: true, duration: 1200, easing: 'easeOutBounce' },
+                    maintainAspectRatio: false, // agar ikut ukuran container
+                    animation: { 
+                        animateRotate: true, 
+                        animateScale: true, 
+                        duration: 1200, 
+                        easing: 'easeOutBounce' 
+                    },
                     plugins: {
                         legend: { position: 'bottom' },
                         tooltip: {
@@ -217,11 +245,9 @@ document.addEventListener("DOMContentLoaded", function() {
         card.addEventListener('click', () => {
             let status = card.dataset.status;
             let url = "{{ url('/pemetaan') }}";
-
             if (status !== 'all') {
                 url += `?status=${status}`;
             }
-
             window.location.href = url;
         });
     });

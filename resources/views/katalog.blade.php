@@ -19,7 +19,7 @@
 <!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
     <div class="container d-flex justify-content-between align-items-center">
-        <a class="navbar-brand d-flex align-items-center text-white" href="#page-top">
+        <a class="navbar-brand d-flex align-items-center text-white" href="{{ url('/') }}">
             <img src="{{ asset('images/logo.png') }}" alt="Logo UMKM" style="height:40px; margin-right:10px;">
             <span class="fw-bold">UMKM Sukahaji, Go Digital</span>
         </a>
@@ -30,9 +30,9 @@
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#tentang">Tentang</a></li>
-                <li class="nav-item"><a class="nav-link" href="#pelayanan">Pelayanan</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url('/#home') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url('/#tentang') }}">Tentang</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url('/#pelayanan') }}">Pelayanan</a></li>
                 <li class="nav-item"><a class="nav-link" href="#katalog">Katalog</a></li>
                 <li class="nav-item"><a class="nav-link" href="#hubungi">Hubungi</a></li>
             </ul>
@@ -40,55 +40,8 @@
     </div>
 </nav>
 
-<!-- ================= MASTHEAD (SETENGAH LAYAR) ================= -->
-<header class="masthead" id="home">
-    <div id="bgCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach(\App\Models\Background::all() as $key => $bg)
-            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                <div class="carousel-bg">
-                    <img src="{{ asset($bg->image) }}" alt="Background" class="bg-image">
-                    <div class="overlay"></div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-
-    <div class="container masthead-content text-center text-white">
-        <h1>Selamat Datang di UMKM Sukahaji</h1>
-        <p>Media informasi untuk mengenal, mendukung, dan memajukan UMKM di Kelurahan Sukahaji</p>
-        <a href="{{ route('auth.login') }}" class="btn btn-primary">LOGIN</a>
-    </div>
-</header>
-
-<!-- ================= TENTANG ================= -->
-<section class="page-section bg-primary" id="tentang">
-    <div class="container text-center">
-        <h2 class="text-white mt-0">UMKM Sukahaji, Berkarya untuk Negeri!</h2>
-        <hr class="divider divider-light" />
-        <p class="text-white-75 mb-4">
-            "Kelurahan Sukahaji memiliki potensi UMKM yang luar biasa. Bersama, kita wujudkan kemandirian ekonomi masyarakat melalui inovasi dan kreativitas pelaku usaha lokal."
-        </p>
-    </div>
-</section>
-
-<!-- ================= LAYANAN ================= -->
-<section class="page-section" id="pelayanan">
-    <div class="container text-center">
-        <h2 class="mt-0">Layanan Kami untuk UMKM Sukahaji</h2>
-        <hr class="divider" />
-        <div class="row gx-4 gx-lg-5">
-            <div class="col-lg-3 col-md-6 mb-4"><div class="mt-5"><div class="mb-2"><i class="bi-gem fs-1 text-primary"></i></div><h3 class="h4 mb-2">Produk Unggul</h3><p class="text-muted mb-0">Kualitas terbaik dari pelaku UMKM lokal.</p></div></div>
-            <div class="col-lg-3 col-md-6 mb-4"><div class="mt-5"><div class="mb-2"><i class="bi-laptop fs-1 text-primary"></i></div><h3 class="h4 mb-2">Inovatif & Kreatif</h3><p class="text-muted mb-0">Selalu menghadirkan ide dan produk terbaru.</p></div></div>
-            <div class="col-lg-3 col-md-6 mb-4"><div class="mt-5"><div class="mb-2"><i class="bi-globe fs-1 text-primary"></i></div><h3 class="h4 mb-2">Siap Go Digital</h3><p class="text-muted mb-0">Produk UMKM Sukahaji siap merambah pasar lebih luas.</p></div></div>
-            <div class="col-lg-3 col-md-6 mb-4"><div class="mt-5"><div class="mb-2"><i class="bi-heart fs-1 text-primary"></i></div><h3 class="h4 mb-2">Dibuat dengan Cinta</h3><p class="text-muted mb-0">Dari kreativitas dan ketulusan warga Sukahaji.</p></div></div>
-        </div>
-    </div>
-</section>
-
 <!-- ================= KATALOG PRODUK ================= -->
-<section class="page-section bg-light" id="katalog">
+<section class="page-section" id="katalog" style="background-color: #fff7d6;">
     <div class="container py-5">
 
         <div class="text-center mb-5">
@@ -97,81 +50,101 @@
         </div>
 
         <!-- Search & Filter -->
-        <form method="GET" action="#katalog" class="row g-2 mb-4 justify-content-center">
-            <div class="text-center mt-4">
-                <a href="{{ route('katalog') }}" class="btn btn-warning btn-lg fw-semibold text-dark shadow-sm">
-                    Lihat Produk
-                </a>
+        <form method="GET" action="{{ route('katalog') }}" class="row g-2 mb-4 justify-content-center">
+            <div class="col-12 col-md-4">
+                <input type="text" name="search" class="form-control form-control-lg shadow-sm"
+                    placeholder="🔍 Cari produk..." value="{{ request('search') }}">
+            </div>
+            <div class="col-6 col-md-2">
+                <input type="number" name="min_price" class="form-control form-control-lg shadow-sm"
+                    placeholder="Harga Min" value="{{ request('min_price') }}">
+            </div>
+            <div class="col-6 col-md-2">
+                <input type="number" name="max_price" class="form-control form-control-lg shadow-sm"
+                    placeholder="Harga Max" value="{{ request('max_price') }}">
+            </div>
+            <div class="col-6 col-md-2 d-grid">
+                <button class="btn btn-warning btn-lg fw-semibold shadow-sm text-dark">
+                    <i class="bi bi-funnel-fill"></i> Filter
+                </button>
+            </div>
+            <div class="col-6 col-md-2 d-grid">
+                <button type="submit" class="btn btn-outline-secondary btn-lg fw-semibold shadow-sm" name="reset" value="1">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </button>
             </div>
         </form>
 
         <!-- Produk Grid -->
         <div class="row">
             @forelse($katalogs as $item)
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                    <div class="card h-100 border-0 shadow-sm product-card">
-                        <div class="overflow-hidden rounded-top">
-                            <img src="{{ asset($item->image ?? 'images/noimage.png') }}" class="card-img-top" alt="{{ $item->name }}">
-                        </div>
-                        <div class="card-body d-flex flex-column p-3">
-                            <h5 class="card-title fw-bold text-dark mb-2">{{ $item->name }}</h5>
-                            <p class="text-muted small mb-2">{{ Str::limit($item->description, 60) }}</p>
-                            <p class="fw-bold text-dark mb-3">Rp {{ number_format($item->price,0,',','.') }}</p>
-                            <button type="button" class="btn btn-theme btn-sm mt-auto text-dark fw-semibold btn-detail" data-item='@json($item)'>
-                                <i class="bi bi-info-circle"></i> Detail
-                            </button>
-                        </div>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    <div class="overflow-hidden rounded-top">
+                        @if($item->image)
+                            <img src="{{ asset($item->image) }}" class="card-img-top" alt="{{ $item->name }}">
+                        @else
+                            <img src="{{ asset('images/noimage.png') }}" class="card-img-top" alt="No Image">
+                        @endif
+                    </div>
+                    <div class="card-body d-flex flex-column p-3">
+                        <h5 class="card-title fw-bold text-dark mb-2">{{ $item->name }}</h5>
+                        <p class="text-muted small mb-2">{{ Str::limit($item->description, 60) }}</p>
+                        <p class="fw-bold text-dark mb-3">Rp {{ number_format($item->price,0,',','.') }}</p>
+                        <button type="button" class="btn btn-theme btn-sm mt-auto text-dark fw-semibold btn-detail" data-item='@json($item)'>
+                            <i class="bi bi-info-circle"></i> Detail
+                        </button>
                     </div>
                 </div>
-            @empty
-                <div class="col-12">
-                    <div class="alert alert-info text-center shadow-sm">
-                        <i class="bi bi-info-circle-fill"></i> Produk tidak ditemukan.
-                    </div>
+            </div>
+        @empty
+            <div class="col-12">
+                <div class="alert alert-info text-center shadow-sm">
+                    <i class="bi bi-info-circle-fill"></i> Produk tidak ditemukan.
                 </div>
-            @endforelse
+            </div>
+        @endforelse
+        </div>
+
+        <!-- Info jumlah -->
+        <div class="text-center text-muted small mb-3">
+            Menampilkan {{ $katalogs->firstItem() }} - {{ $katalogs->lastItem() }} dari total {{ $katalogs->total() }} produk
+        </div>
+
+        <!-- Pagination di kanan bawah -->
+        <div class="d-flex justify-content-end align-items-center mt-3">
+            <div style="display: flex; gap: 5px;">
+                {{-- Tombol Prev --}}
+                @if ($katalogs->onFirstPage())
+                    <span style="padding: 6px 12px; background: #fcd9b6; border-radius: 5px; color: #9ca3af;">&laquo; Prev</span>
+                @else
+                    <a href="{{ $katalogs->previousPageUrl() }}" style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px; text-decoration: none;">&laquo; Prev</a>
+                @endif
+
+                {{-- Nomor halaman terbatas 3 --}}
+                @php
+                    $start = max($katalogs->currentPage() - 1, 1);
+                    $end = min($katalogs->currentPage() + 1, $katalogs->lastPage());
+                @endphp
+
+                @for ($page = $start; $page <= $end; $page++)
+                    @if ($page == $katalogs->currentPage())
+                        <span style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px;">{{ $page }}</span>
+                    @else
+                        <a href="{{ $katalogs->url($page) }}" style="padding: 6px 12px; background: #fde68a; color: #374151; border-radius: 5px; text-decoration: none;">{{ $page }}</a>
+                    @endif
+                @endfor
+
+                {{-- Tombol Next --}}
+                @if ($katalogs->hasMorePages())
+                    <a href="{{ $katalogs->nextPageUrl() }}" style="padding: 6px 12px; background: #f97316; color: white; border-radius: 5px; text-decoration: none;">Next &raquo;</a>
+                @else
+                    <span style="padding: 6px 12px; background: #fcd9b6; border-radius: 5px; color: #9ca3af;">Next &raquo;</span>
+                @endif
+            </div>
         </div>
     </div>
 </section>
-
-
-<!-- ================= FOOTER ================= -->
-<footer style="background-color:#003d29;" class="text-white pt-5 pb-3" id="hubungi">
-    <div class="container">
-        <div class="row gy-4">
-            <!-- Logo & Alamat -->
-            <div class="col-lg-4 col-md-6">
-                <div class="d-flex flex-column flex-sm-row align-items-center text-center text-md-start">
-                    <img src="{{ asset('images/logo.sukahaji.png') }}" 
-                         alt="Logo Desa" 
-                         style="height:80px; margin-right:15px;">
-                    <div class="mt-3 mt-sm-0">
-                        <p class="mb-0 fw-semibold">Jl. H. Zakaria No.24, Kota Bandung</p>
-                        <p class="mb-0">Provinsi Jawa Barat, 40221</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hubungi Kami -->
-            <div class="col-lg-4 col-md-6 text-center text-md-start">
-                <h6 class="fw-bold mb-3">Hubungi Kami</h6>
-                <p><i class="bi bi-telephone me-2"></i> 081299813667</p>
-                <p><i class="bi bi-envelope me-2"></i> ksukahaji@gmail.com</p>
-                <p><i class="bi bi-envelope me-2"></i> kelsukahajicakep@gmail.com</p>
-            </div>
-
-            <!-- Nomor Penting -->
-            <div class="col-lg-4 text-center text-md-start">
-                <h6 class="fw-bold mb-3">Nomor Penting</h6>
-                <p>081221694123</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="text-center py-3 mt-4" style="background-color: rgba(0,0,0,0.2);">
-        <span>Copyright &copy; Sukahaji {{ date('Y') }}</span>
-    </div>
-</footer>
 
 <!-- ================= MODAL DETAIL PRODUK ================= -->
 <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
@@ -212,6 +185,44 @@
   </div>
 </div>
 
+<!-- ================= FOOTER ================= -->
+<footer style="background-color:#003d29;" class="text-white pt-5 pb-3" id="hubungi">
+    <div class="container">
+        <div class="row gy-4">
+            <!-- Logo & Alamat -->
+            <div class="col-lg-4 col-md-6">
+                <div class="d-flex flex-column flex-sm-row align-items-center text-center text-md-start">
+                    <img src="{{ asset('images/logo.sukahaji.png') }}" 
+                         alt="Logo Desa" 
+                         style="height:80px; margin-right:15px;">
+                    <div class="mt-3 mt-sm-0">
+                        <p class="mb-0 fw-semibold">Jl. H. Zakaria No.24, Kota Bandung</p>
+                        <p class="mb-0">Provinsi Jawa Barat, 40221</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hubungi Kami -->
+            <div class="col-lg-4 col-md-6 text-center text-md-start">
+                <h6 class="fw-bold mb-3">Hubungi Kami</h6>
+                <p><i class="bi bi-telephone me-2"></i> 081299813667</p>
+                <p><i class="bi bi-envelope me-2"></i> ksukahaji@gmail.com</p>
+                <p><i class="bi bi-envelope me-2"></i> kelsukahajicakep@gmail.com</p>
+            </div>
+
+            <!-- Nomor Penting -->
+            <div class="col-lg-4 text-center text-md-start">
+                <h6 class="fw-bold mb-3">Nomor Penting</h6>
+                <p>081221694123</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center py-3 mt-4" style="background-color: rgba(0,0,0,0.2);">
+        <span>Copyright &copy; Sukahaji {{ date('Y') }}</span>
+    </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
@@ -228,7 +239,7 @@
 }
 
 .nav-link {
-    color: #fff !important; /* putih */
+    color: #fff !important; /* putih default */
     font-weight: 600;
     margin: 0 6px;
     transition: color 0.3s ease;
@@ -236,7 +247,7 @@
 
 .nav-link:hover,
 .nav-link.active {
-    color: #f6c23e !important; /* kuning saat aktif atau hover */
+    color: #f6c23e !important; /* kuning untuk aktif & hover */
 }
 
 /* Biar bagian konten tidak ketutup navbar */
@@ -251,36 +262,7 @@ body {
 .masthead-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; }
 
 /* === KATALOG PRODUK === */
-#katalog {
-    background-color: #f4623a !important; /* oranye */
-    color: #fff;
-    padding-top: 80px;
-    padding-bottom: 80px;
-}
-
-/* Warna teks di dalam section katalog */
-#katalog h2,
-#katalog p {
-    color: #fff !important;
-}
-
-/* Tombol 'Lihat Produk' */
-.btn-katalog {
-    background-color: #fff;
-    color: #f4623a;
-    border: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn-katalog:hover {
-    background-color: #ff9f43; /* oranye muda saat hover */
-    color: #fff;
-}
-
-/* Kartu produk */
 .product-card {
-    background: #fff;
     border-radius: 16px;
     transition: all 0.3s ease;
     min-height: 100%;
@@ -303,6 +285,7 @@ body {
     box-shadow: 0 8px 24px rgba(255,140,0,0.2);
     transform: translateY(-3px);
 }
+
 .btn-theme {
     background: linear-gradient(45deg, #ff6b6b, #feca57, #f8c291);
     color: #000;
@@ -310,13 +293,52 @@ body {
     font-weight: 600;
 }
 
-/* Responsive */
 @media (max-width: 767.98px) {
     .product-card img {
         height: 180px;
     }
 }
 
+/* === PAGINATION === */
+.pagination {
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.page-item .page-link {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    color: #000;
+    border: 1px solid #ccc;
+}
+
+.page-item.active .page-link {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
+/* Responsive */
+@media (max-width: 576px){
+    .product-card img { height: 180px; }
+}
+/* Warna background katalog */
+#katalog {
+    background-color: #fff7d6; /* kuning lembut */
+}
+
+/* Tombol kembali (default hitam, hover oranye) */
+.btn-dark {
+    background-color: #f4623a !important;  /* warna dasar hitam */
+    border: none !important;
+    transition: all 0.3s ease;
+}
+
+.btn-dark:hover {
+    background-color: #f4623a !important; /* oranye saat hover */
+    color: #fff !important;
+}
 
 /* === MODAL DETAIL PRODUK === */
 .btn-gradient {
@@ -370,6 +392,33 @@ document.addEventListener("DOMContentLoaded", function () {
     // Smooth scroll ketika menu diklik
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function (e) {
+            if (this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Tambah event listener ke semua menu navbar
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            // Hapus class active dari semua link
+            navLinks.forEach(l => l.classList.remove('active'));
+            
+            // Tambahkan class active ke link yang diklik
+            this.classList.add('active');
+
+            // Smooth scroll jika menuju section (#)
             if (this.getAttribute('href').startsWith('#')) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));

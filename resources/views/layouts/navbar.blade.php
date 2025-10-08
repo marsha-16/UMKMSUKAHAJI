@@ -141,12 +141,15 @@
                 </span>
 
                 {{-- Foto Profil --}}
-                @if($authUser && $authUser->photo)
+                @if($authUser && $authUser->photo && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $authUser->photo))
                     <img src="{{ asset($authUser->photo) }}" 
-                        class="rounded-circle" width="40" height="40" alt="Foto Profil">
+                        class="rounded-circle border border-warning"
+                        width="40" height="40" alt="Foto Profil">
                 @else
-                    <img src="{{ asset('images/default.png') }}" 
-                        class="rounded-circle" width="40" height="40" alt="Default Foto">
+                    <div class="d-flex justify-content-center align-items-center bg-light rounded-circle border border-warning"
+                        style="width:40px; height:40px;">
+                        <i class="fas fa-user text-warning" style="font-size:18px;"></i>
+                    </div>
                 @endif
             </a>
 

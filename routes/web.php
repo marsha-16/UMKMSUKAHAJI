@@ -15,12 +15,49 @@ use App\Http\Controllers\Admin\KatalogController as AdminKatalogController;
 use App\Http\Controllers\User\KatalogController as UserKatalogController;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\BackgroundController;
+use App\Models\Katalog;
+use Illuminate\Http\Request;
 
-
-// =================== HALAMAN UTAMA ===================
+// Halaman Utama (index)
 Route::get('/', function () {
-    return view('index');
+    // Ambil 4 produk terbaru saja untuk ditampilkan di homepage
+    $katalogs = Katalog::latest()->take(4)->get();
+
+    return view('index', compact('katalogs'));
 })->name('home');
+
+Route::get('/katalog', function (Request $request) {
+    // Query dasar
+    $query = Katalog::query();
+
+    // Jika tombol reset ditekan, tampilkan semua data
+    if ($request->has('reset')) {
+        return redirect('/katalog');
+    }
+
+    // FILTER: berdasarkan kata kunci
+    if ($request->filled('search')) {
+        $query->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('description', 'like', '%' . $request->search . '%');
+    }
+
+    // FILTER: harga minimum
+    if ($request->filled('min_price')) {
+        $query->where('price', '>=', $request->min_price);
+    }
+
+    // FILTER: harga maksimum
+    if ($request->filled('max_price')) {
+        $query->where('price', '<=', $request->max_price);
+    }
+
+    // Ambil data hasil filter dengan pagination
+    $katalogs = $query->latest()->paginate(8)->withQueryString();
+
+    return view('katalog', compact('katalogs'));
+})->name('katalog');
+
+
 
 // =================== USER AUTH ===================
 Route::get('/login', [UserAuthController::class, 'loginForm'])->name('auth.login'); 

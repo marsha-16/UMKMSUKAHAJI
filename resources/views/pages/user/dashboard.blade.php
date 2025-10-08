@@ -4,22 +4,26 @@
 <div class="container py-4">
     <!-- Judul -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 fw-bold text-dark">Dashboard</h1>
+        <h1 class="h3 fw-bold text-dark text-md-start w-100">Dashboard</h1>
     </div>
 
     <!-- Welcome Card -->
     <div class="row mb-4">
-        <div class="col-lg-12">
+        <div class="col-12">
             <div class="card shadow-lg border-0">
                 <div class="card-body text-center">
                     <!-- Logo -->
                     <img src="{{ asset('images/logo.png') }}" 
                          alt="Pemetaan UMKM Kelurahan Sukahaji" 
                          class="img-fluid mb-3 rounded-circle shadow-sm"
-                         style="max-height:180px;">
+                         style="max-height:160px; width:auto;">
                     
-                    <h4 class="fw-bold mb-1">Selamat Datang, <strong>{{ auth()->user()->name }}</strong>! </h4>
-                    <p class="text-muted"> Ayo kelola dan jelajahi UMKM Sukahaji dengan lebih mudah.</p>
+                    <h4 class="fw-bold mb-1 text-dark">
+                        Selamat Datang, <strong>{{ auth()->user()->name }}</strong>!
+                    </h4>
+                    <p class="text-muted mb-0">
+                        Ayo kelola dan jelajahi UMKM Sukahaji dengan lebih mudah.
+                    </p>
                 </div>
             </div>
         </div>
@@ -71,17 +75,17 @@
 
 @push('styles')
 <style>
-    /* Hover effect */
+    /* Card hover & radius */
     .hover-card {
         transition: all 0.3s ease-in-out;
-        border-radius: 15px;
+        border-radius: 16px;
     }
     .hover-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 1rem 2rem rgba(0,0,0,0.2) !important;
+        transform: translateY(-6px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15) !important;
     }
 
-    /* Gradient background */
+    /* Gradients */
     .gradient-blue {
         background: linear-gradient(135deg, #1e88e5, #42a5f5);
     }
@@ -92,30 +96,60 @@
         background: linear-gradient(135deg, #fb8c00, #ff7043);
     }
 
-    /* Text color white */
+    /* Text */
     .hover-card h5,
     .hover-card p,
     .hover-card i {
         color: #fff !important;
     }
 
-    /* Stats card */
-    .stat-card {
-        border-radius: 12px;
-        transition: all 0.3s;
-    }
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0.8rem 1.5rem rgba(0,0,0,0.15);
+    /* Responsif */
+    @media (max-width: 992px) {
+        h1.h3 {
+            font-size: 1.6rem;
+            text-align: center;
+        }
     }
 
-    /* Responsive tweak */
     @media (max-width: 768px) {
-        h1.h3 {
-            font-size: 1.4rem;
+        .hover-card {
+            border-radius: 12px;
         }
-        .card-body p {
+        .hover-card i {
+            font-size: 2.3rem;
+        }
+        .hover-card h5 {
+            font-size: 1rem;
+        }
+        .hover-card p {
             font-size: 0.85rem;
+        }
+        .card-body {
+            padding: 1.2rem;
+        }
+        img {
+            max-height: 130px !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hover-card {
+            margin-bottom: 1rem;
+        }
+        .hover-card i {
+            font-size: 2rem;
+        }
+        .hover-card h5 {
+            font-size: 0.95rem;
+        }
+        .hover-card p {
+            font-size: 0.8rem;
+        }
+        h1.h3 {
+            font-size: 1.3rem;
+        }
+        .container {
+            padding: 0 10px;
         }
     }
 </style>
