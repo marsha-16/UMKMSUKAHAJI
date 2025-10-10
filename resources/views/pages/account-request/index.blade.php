@@ -1,4 +1,5 @@
 @extends('layouts.app')
+<title>UMKM Sukahaji - Permintaan Akun</title>
 
 @section('content')
     <!-- Page Heading -->

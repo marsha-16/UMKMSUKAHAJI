@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Pemetaan</title>
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
@@ -16,44 +17,44 @@
             @endif
             
             {{-- Tombol Buat Pemetaan (hanya untuk User) --}}
-@auth
-@if(auth('web')->check())
-    <a href="/pemetaan/create" class="btn btn-sm btn-primary shadow-sm">
-        <i class="fas fa-plus fa-sm text-white-50"></i> Buat Pemetaan UMKM
-    </a>
-@endif
-@endauth
+            @auth
+            @if(auth('web')->check())
+                <a href="/pemetaan/create" class="btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Buat Pemetaan UMKM
+                </a>
+            @endif
+            @endauth
 
         </div>
     </div>
     <div class="container">
 
         {{-- Flash Messages dengan SweetAlert2 --}}
-@if (session('success'))
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('success') }}',
-                confirmButtonText: 'OK',
-            });
-        });
-    </script>
-@endif
+        @if (session('success'))
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '{{ session('success') }}',
+                        confirmButtonText: 'OK',
+                    });
+                });
+            </script>
+        @endif
 
-@if (session('error'))
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: '{{ session('error') }}',
-                confirmButtonText: 'Tutup',
-            });
-        });
-    </script>
-@endif
+        @if (session('error'))
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: '{{ session('error') }}',
+                        confirmButtonText: 'Tutup',
+                    });
+                });
+            </script>
+        @endif
     </div>
 
     {{-- Table --}}
@@ -105,43 +106,47 @@
                                     <td>{{ $item->promotion }}</td>
                                     <td>{{ $item->document }}</td>
                                     <td class="text-center align-middle">
-                                        @if ($item->document_photo)
+                                        @php
+                                            $photo = $item->document_photo;
+                                        @endphp
+
+                                        @if (empty($photo) || $photo === 'images/default.png' || !file_exists(public_path($photo)))
+                                            <span class="text-muted fst-italic">Tidak ada</span>
+                                        @else
                                             @php
-                                                $extension = strtolower(pathinfo($item->document_photo, PATHINFO_EXTENSION));
-                                                $fileName = basename($item->document_photo);
+                                                $extension = strtolower(pathinfo($photo, PATHINFO_EXTENSION));
+                                                $fileName = basename($photo);
                                             @endphp
 
                                             @if (in_array($extension, ['jpg','jpeg','png','gif','webp']))
                                                 <!-- Kalau gambar -->
-                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
-                                                    <img src="{{ asset($item->document_photo) }}" 
+                                                <a href="{{ asset($photo) }}" target="_blank" title="{{ $fileName }}">
+                                                    <img src="{{ asset($photo) }}" 
                                                         alt="Foto Dokumen" 
                                                         class="img-thumbnail" 
                                                         style="max-width: 120px;">
                                                 </a>
                                             @elseif ($extension === 'pdf')
                                                 <!-- Kalau PDF -->
-                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                <a href="{{ asset($photo) }}" target="_blank" title="{{ $fileName }}">
                                                     <i class="fa-solid fa-file-pdf fa-3x text-danger"></i>
                                                 </a>
                                             @elseif (in_array($extension, ['doc','docx']))
                                                 <!-- Kalau Word -->
-                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                <a href="{{ asset($photo) }}" target="_blank" title="{{ $fileName }}">
                                                     <i class="fa-solid fa-file-word fa-3x text-primary"></i>
                                                 </a>
                                             @elseif (in_array($extension, ['xls','xlsx']))
                                                 <!-- Kalau Excel -->
-                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                <a href="{{ asset($photo) }}" target="_blank" title="{{ $fileName }}">
                                                     <i class="fa-solid fa-file-excel fa-3x text-success"></i>
                                                 </a>
                                             @else
-                                                <!-- Default file icon -->
-                                                <a href="{{ asset($item->document_photo) }}" target="_blank" title="{{ $fileName }}">
+                                                <!-- File lain -->
+                                                <a href="{{ asset($photo) }}" target="_blank" title="{{ $fileName }}">
                                                     <i class="fa-solid fa-file fa-3x text-secondary"></i>
                                                 </a>
                                             @endif
-                                        @else
-                                            <span class="text-muted">Belum ada</span>
                                         @endif
                                     </td>
                                     <td data-report-date="{{ \Carbon\Carbon::parse($item->report_date)->toIso8601String() }}">
@@ -229,6 +234,7 @@
         </div>
     </div>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const { DateTime } = luxon;

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Pemetaan</title>
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Ubah Data UMKM</h1>
@@ -51,87 +52,36 @@
                         <div class="form-group mb-3">
                             <label for="business">Jenis Usaha</label>
                             <select name="business" id="business" class="form-control @error('business') is-invalid @enderror">
-                                @foreach ([
-                                    (object) [
-                                        "label" => "Warung Kelontong",
-                                        "value" => "Warung Kelontong",
-                                    ],
-                                    (object) [
-                                        "label" => "Makanan dan Minuman",
-                                        "value" => "Makanan dan Minuman",
-                                    ],
-                                    (object) [
-                                        "label" => "Sayur Mayur dan Daging",
-                                        "value" => "Sayur Mayur dan Daging",
-                                    ],
-                                    (object) [
-                                        "label" => "Pakaian",
-                                        "value" => "Pakaian",
-                                    ],
-                                    (object) [
-                                        "label" => "Jajanan Pasar",
-                                        "value" => "Jajanan Pasar",
-                                    ],
-                                    (object) [
-                                        "label" => "Jasa Fotocopy",
-                                        "value" => "Jasa Fotocopy",
-                                    ],
-                                    (object) [
-                                        "label" => "Servis Elektronik",
-                                        "value" => "Servis Elektronik",
-                                    ],
-                                    (object) [
-                                        "label" => "Jasa Sumur Bor",
-                                        "value" => "Jasa Sumur Bor",
-                                    ],
-                                    (object) [
-                                        "label" => "Kaligrafi",
-                                        "value" => "Kaligrafi",
-                                    ],
-                                    (object) [
-                                        "label" => "Air Isi Ulang",
-                                        "value" => "Air Isi Ulang",
-                                    ],
-                                    (object) [
-                                        "label" => "Jasa Tenaga",
-                                        "value" => "Jasa Tenaga",
-                                    ],
-                                    (object) [
-                                        "label" => "Refill Parfum",
-                                        "value" => "Refill Parfum",
-                                    ],
-                                    (object) [
-                                        "label" => "Olahraga dan Hiburan",
-                                        "value" => "Olahraga dan Hiburan",
-                                    ],
-                                    (object) [
-                                        "label" => "Jual Beli Hewan Ternak",
-                                        "value" => "Jual Beli Hewan Ternak",
-                                    ],
-                                    (object) [
-                                        "label" => "Buah-Buahan",
-                                        "value" => "Buah-Buahan",
-                                    ],
-                                    (object) [
-                                        "label" => "Home Industri",
-                                        "value" => "Home Industri",
-                                    ],
-                                    (object) [
-                                        "label" => "Konter Handphone",
-                                        "value" => "Konter Handphone",
-                                    ],
-                                    (object) [
-                                        "label" => "Accessories",
-                                        "value" => "Accessories",
-                                    ],
-                                ] as $item)
-                                <option value="{{ $item->value }}" @selected(old('business', $pemetaan->business) == $item->value)>{{ $item->label }}</option>
+                                @php
+                                    $defaultBusinesses = [
+                                        'Warung Kelontong', 'Makanan dan Minuman', 'Sayur Mayur dan Daging',
+                                        'Pakaian', 'Jajanan Pasar', 'Jasa Fotocopy',
+                                        'Servis Elektronik', 'Jasa Sumur Bor', 'Yang Lain'
+                                    ];
+                                    $currentBusiness = old('business', $pemetaan->business);
+                                    $isCustomBusiness = !in_array($currentBusiness, $defaultBusinesses);
+                                @endphp
+
+                                @foreach ($defaultBusinesses as $item)
+                                    <option value="{{ $item }}"
+                                        @selected($currentBusiness == $item || ($isCustomBusiness && $item == 'Yang Lain'))>
+                                        {{ $item }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('business')
-                                <span class="invalid-feedback">
-                                    {{ $message }}
-                                </span>
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Yang Lain -->
+                        <div class="form-group mb-3" id="otherField"
+                            style="{{ $currentBusiness == 'Yang Lain' || $isCustomBusiness ? '' : 'display:none;' }}">
+                            <label for="other">Yang Lain</label>
+                            <textarea name="other" id="other" cols="30" rows="5"
+                                class="form-control @error('other') is-invalid @enderror">{{ old('other', $isCustomBusiness ? $pemetaan->business : '') }}</textarea>
+                            @error('other')
+                                <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                             <div class="form-group mb-3">
@@ -188,6 +138,10 @@
                                             'label' => 'Gojek/Grab',
                                             'value' => 'Gojek/Grab',
                                         ],
+                                        (object) [
+                                            'label' => 'Offline',
+                                            'value' => 'Offline',
+                                        ],
                                     ] as $item)
                                         <option value="{{ $item->value }}" @selected(old('promotion', $pemetaan->promotion) == $item->value)>{{ $item->label }}</option>
                                     @endforeach
@@ -234,32 +188,31 @@
                         </div>
 
                         <!-- Upload Foto Dokumen -->
-<div class="form">
-    <label for="document_photo" class="d-block">Upload Foto Dokumen</label>
+                        <div class="form">
+                            <label for="document_photo" class="d-block">Upload Foto Dokumen</label>
 
-    @if ($pemetaan->document_photo)
-        <img id="previewImage" 
-             src="{{ asset($pemetaan->document_photo) }}" 
-             alt="Foto Dokumen" 
-             class="img-thumbnail mb-2" 
-             style="max-width: 200px;">
-    @else
-        <img id="previewImage" 
-             src="https://via.placeholder.com/200x150?text=Belum+Ada+Foto" 
-             alt="Foto Dokumen" 
-             class="img-thumbnail mb-2" 
-             style="max-width: 200px;">
-    @endif
+                            @if ($pemetaan->document_photo)
+                                <img id="previewImage" 
+                                    src="{{ asset($pemetaan->document_photo) }}" 
+                                    alt="Foto Dokumen" 
+                                    class="img-thumbnail mb-2" 
+                                    style="max-width: 200px;">
+                            @else
+                                <img id="previewImage" 
+                                    src="https://via.placeholder.com/200x150?text=Belum+Ada+Foto" 
+                                    alt="Foto Dokumen" 
+                                    class="img-thumbnail mb-2" 
+                                    style="max-width: 200px;">
+                            @endif
 
-    <input type="file" name="document_photo" id="document_photo"
-        class="form-control-file mt-2 @error('document_photo') is-invalid @enderror"
-        accept="image/*" onchange="previewFile(event)">
+                            <input type="file" name="document_photo" id="document_photo"
+                                class="form-control-file mt-2 @error('document_photo') is-invalid @enderror"
+                                accept="image/*" onchange="previewFile(event)">
 
-    @error('document_photo')
-        <span class="invalid-feedback d-block">{{ $message }}</span>
-    @enderror
-</div>
-
+                            @error('document_photo')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                     <!-- Footer sejajar tombol -->
                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -287,6 +240,25 @@ function previewFile(event) {
         reader.readAsDataURL(file);
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const businessSelect = document.getElementById('business');
+    const otherField = document.getElementById('otherField');
+    const otherInput = document.getElementById('other');
+
+    function toggleOtherField() {
+        if (businessSelect.value === 'Yang Lain') {
+            otherField.style.display = '';
+            otherInput.required = true;
+        } else {
+            otherField.style.display = 'none';
+            otherInput.required = false;
+            otherInput.value = ''; // kosongkan kalau ganti pilihan
+        }
+    }
+
+    businessSelect.addEventListener('change', toggleOtherField);
+});
 </script>
 
 @endsection

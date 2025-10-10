@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Katalog</title>
+
 <div class="container py-4">
 
     <!-- Judul -->

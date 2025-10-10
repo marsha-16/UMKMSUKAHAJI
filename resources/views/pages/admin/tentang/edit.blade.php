@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Tentang UMKM</title>
+
 <div class="container">
     <h2>Edit Tentang UMKM</h2>
     <form action="{{ route('admin.tentang.update', $tentang->id) }}" method="POST">

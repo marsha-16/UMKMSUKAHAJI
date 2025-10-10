@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Pemetaan</title>
+
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Buat UMKM Sukahaji</h1>
@@ -62,21 +64,22 @@
                                 'Jasa Fotocopy',
                                 'Servis Elektronik',
                                 'Jasa Sumur Bor',
-                                'Kaligrafi',
-                                'Air Isi Ulang',
-                                'Jasa Tenaga',
-                                'Refill Parfum',
-                                'Olahraga dan Hiburan',
-                                'Jual Beli Hewan Ternak',
-                                'Buah-Buahan',
-                                'Home Industri',
-                                'Konter Handphone',
-                                ' Accessories'
+                                'Yang Lain'
                             ] as $item)
                                 <option value="{{ $item }}" @selected(old('business') == $item)>{{ $item }}</option>
                             @endforeach
                         </select>
                         @error('business')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Yang Lain -->
+                    <div class="form-group mb-3" id="otherField" style="display: none;">
+                        <label for="other">Yang Lain</label>
+                        <textarea name="other" id="other" cols="30" rows="5"
+                            class="form-control @error('other') is-invalid @enderror">{{ old('other') }}</textarea>
+                        @error('other')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
@@ -98,7 +101,7 @@
                     <div class="form-group mb-3">
                         <label for="promotion">Platform Digital</label>
                         <select name="promotion" id="promotion" class="form-control @error('promotion') is-invalid @enderror">
-                            @foreach (['Whatsapp','Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'] as $item)
+                            @foreach (['Whatsapp','Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab', 'Offline'] as $item)
                                 <option value="{{ $item }}" @selected(old('promotion') == $item)>{{ $item }}</option>
                             @endforeach
                         </select>
@@ -165,6 +168,27 @@
         if (input.files && input.files[0]) {
             reader.readAsDataURL(input.files[0]);
         }
+    });
+
+    <!-- Script untuk menampilkan/menyembunyikan kolom -->
+    document.addEventListener("DOMContentLoaded", function () {
+        const businessSelect = document.getElementById("business");
+        const otherField = document.getElementById("otherField");
+
+        function toggleOtherField() {
+            if (businessSelect.value === "Yang Lain") {
+                otherField.style.display = "block";
+            } else {
+                otherField.style.display = "none";
+                document.getElementById("other").value = ""; // kosongkan kalau disembunyikan
+            }
+        }
+
+        // Jalankan saat halaman pertama kali dimuat (agar tetap tampil kalau user sudah pilih "Yang Lain" sebelumnya)
+        toggleOtherField();
+
+        // Jalankan setiap kali user mengganti pilihan
+        businessSelect.addEventListener("change", toggleOtherField);
     });
 </script>
 @endsection

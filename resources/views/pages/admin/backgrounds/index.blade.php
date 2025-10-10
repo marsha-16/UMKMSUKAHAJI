@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Masthead</title>
+
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-dark">Kelola Background</h2>

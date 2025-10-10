@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Tentang UMKM</title>
+
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-dark font-weight-bold">Tentang UMKM Sukahaji</h2>

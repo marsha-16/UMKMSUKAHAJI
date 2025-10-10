@@ -9,7 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>UMKM Sukahaji - Dashboard</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('logo_umkm.ico') }}">
+    <meta name="theme-color" content="#f4623a">
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Dashboard Admin</title>
+
 <div class="container-fluid">
     <!-- Judul -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">

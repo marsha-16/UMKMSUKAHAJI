@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Katalog</title>
+  
 <div class="container py-4 fade-in">
     <div class="row g-4 align-items-center">
 

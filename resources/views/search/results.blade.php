@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Pencarian</title>
+
 <div class="container">
 
     <!-- Hasil Pencarian -->

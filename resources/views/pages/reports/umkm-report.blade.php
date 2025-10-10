@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<title>UMKM Sukahaji - Laporan UMKM</title>
+
 <div class="container report-container">
 
     <!-- Header laporan -->
@@ -41,6 +43,7 @@
                     <th>Alamat</th>
                     <th>No Telepon</th>
                     <th>Jenis Usaha</th>
+                    <th>Yang Lain</th>
                     <th>Jenis Pemasaran</th>
                     <th>Platform Digital</th>
                     <th>Dokumen Penunjang</th>
@@ -57,11 +60,12 @@
                         <td>{{ $item->address }}</td>
                         <td>{{ $item->phone }}</td>
                         <td>{{ $item->business }}</td>
+                        <td>{{ $item->other }}</td>
                         <td>{{ $item->marketing }}</td>
                         <td>{{ $item->promotion }}</td>
                         <td>{{ $item->document }}</td>
                         <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                        <td>{{ $item->status_label ?? ucfirst($item->status) }}</td>
+                        {{-- <td>{{ $item->status_label ?? ucfirst($item->status) }}</td> --}}
                     </tr>
                 @endforeach
             </tbody>

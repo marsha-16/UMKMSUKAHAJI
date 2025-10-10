@@ -69,14 +69,15 @@ public function index(Request $request)
             'business' => ['required', Rule::in([
                 'Warung Kelontong', 'Makanan dan Minuman', 'Sayur Mayur dan Daging',
                 'Pakaian', 'Jajanan Pasar', 'Jasa Fotocopy',
-                'Servis Elektronik', 'Jasa Sumur Bor', 'Kaligrafi', 'Air Isi Ulang',
-                'Jasa Tenaga', 'Refill Parfum', 'Olahraga dan Hiburan', 'Jual Beli Hewan Ternak',
-                'Buah-Buahan', 'Home Industri', 'Konter Handphone', 'Accessories'
+                'Servis Elektronik', 'Jasa Sumur Bor', 'Yang Lain'
             ])],
+            'other' => ['nullable', 'string', 'max:100', 'required_if:business,Yang Lain'],
             'marketing' => ['required', Rule::in(['Tunai', 'Online'])],
-            'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
+            'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab', 'Offline'])],
             'document' => ['required', Rule::in(['Nomor Induk Berusaha', 'Sertifikat Halal', 'Pangan Industri Rumah Tangga', 'Belum Punya', 'Dalam Proses'])],
             'document_photo' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            ], [
+        'other.required_if' => 'Kolom "Yang Lain" wajib diisi jika Anda memilih "Yang Lain" pada Jenis Usaha.',
         ]);
 
         $umkm = Auth::user()->umkm;
@@ -85,13 +86,18 @@ public function index(Request $request)
             return redirect('/pemetaan')->with('error', 'Akun anda belum terhubung dengan data penduduk manapun');
         }
 
+         // Tentukan nilai business akhir
+        $finalBusiness = $request->business === 'Yang Lain'
+        ? $request->other
+        : $request->business;
+
         $pemetaan = new Pemetaan();
         $pemetaan->umkm_id = $umkm->id;
         $pemetaan->name = $request->input('name');
         $pemetaan->nik = $request->input('nik');
         $pemetaan->address = $request->input('address');
         $pemetaan->phone = $request->input('phone');
-        $pemetaan->business = $request->input('business');
+        $pemetaan->business = $finalBusiness;
         $pemetaan->marketing = $request->input('marketing');
         $pemetaan->promotion = $request->input('promotion');
         $pemetaan->document = $request->input('document');
@@ -148,14 +154,15 @@ public function index(Request $request)
             'business' => ['required', Rule::in([
                 'Warung Kelontong', 'Makanan dan Minuman', 'Sayur Mayur dan Daging',
                 'Pakaian', 'Jajanan Pasar', 'Jasa Fotocopy',
-                'Servis Elektronik', 'Jasa Sumur Bor', 'Kaligrafi', 'Air Isi Ulang',
-                'Jasa Tenaga', 'Refill Parfum', 'Olahraga dan Hiburan', 'Jual Beli Hewan Ternak',
-                'Buah-Buahan', 'Home Industri', 'Konter Handphone', 'Accessories'
+                'Servis Elektronik', 'Jasa Sumur Bor', 'Yang Lain'
             ])],
+            'other' => ['nullable', 'string', 'max:100', 'required_if:business,Yang Lain'],
             'marketing' => ['required', Rule::in(['Tunai', 'Online'])],
-            'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab'])],
+            'promotion' => ['required', Rule::in(['Whatsapp', 'Facebook', 'Instagram', 'TikTok', 'Shopee', 'Tokopedia', 'Gojek/Grab', 'Offline'])],
             'document' => ['required', Rule::in(['Nomor Induk Berusaha', 'Sertifikat Halal', 'Pangan Industri Rumah Tangga', 'Belum Punya', 'Dalam Proses'])],
             'document_photo' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            ], [
+        'other.required_if' => 'Kolom "Yang Lain" wajib diisi jika Anda memilih "Yang Lain" pada Jenis Usaha.',
         ]);
 
         $umkm = Auth::user()->umkm;
@@ -166,15 +173,22 @@ public function index(Request $request)
 
         $pemetaan = Pemetaan::findOrFail($id);
 
-        $pemetaan->umkm_id = $umkm->id;
-        $pemetaan->name = $request->input('name');
-        $pemetaan->nik = $request->input('nik');
-        $pemetaan->address = $request->input('address');
-        $pemetaan->phone = $request->input('phone');
-        $pemetaan->business = $request->input('business');
-        $pemetaan->marketing = $request->input('marketing');
-        $pemetaan->promotion = $request->input('promotion');
-        $pemetaan->document = $request->input('document');
+        // Tentukan nilai business akhir
+        $finalBusiness = $request->business === 'Yang Lain'
+        ? $request->other
+        : $request->business;
+
+        $pemetaan->update([
+        'umkm_id' => $umkm->id,
+        'name' => $request->name,
+        'nik' => $request->nik,
+        'address' => $request->address,
+        'phone' => $request->phone,
+        'business' => $finalBusiness,
+        'marketing' => $request->marketing,
+        'promotion' => $request->promotion,
+        'document' => $request->document,
+    ]);
 
         // UPDATE
         if ($request->hasFile('document_photo')) {
