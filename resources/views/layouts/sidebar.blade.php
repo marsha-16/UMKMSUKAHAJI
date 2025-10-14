@@ -9,7 +9,7 @@
             ],
             (object) [
                 'title' => 'Tentang UMKM Sukahaji',
-                'path' => 'admin/tentang',   // ✅ ganti ke prefix admin
+                'path' => 'admin/tentang',
                 'icon' => 'fas fa-fw fa-lightbulb',
             ],
             (object) [
@@ -71,7 +71,7 @@
             ],
             (object) [
                 'title' => 'Tentang UMKM Sukahaji',
-                'path' => 'tentang-umkm',   // ✅ ganti ke route user
+                'path' => 'tentang-umkm',
                 'icon' => 'fas fa-fw fa-lightbulb',
             ],
             (object) [
@@ -124,55 +124,55 @@
     Main Menu
 </div>
 
+<hr class="sidebar-divider my-0">
 
-    <hr class="sidebar-divider my-0">
-
-    @auth
-        @foreach ($menus[auth()->user()->role_id] as $menu)
-            @if (!empty($menu->children))
-                @php
-                    $isOpen = false;
-                    foreach($menu->children as $child){
-                        if(request()->is($child->path . '*')){
-                            $isOpen = true;
-                            break;
-                        }
+@auth
+    @foreach ($menus[auth()->user()->role_id] as $menu)
+        @if (!empty($menu->children))
+            @php
+                $isOpen = false;
+                foreach($menu->children as $child){
+                    if(request()->is($child->path . '*')){
+                        $isOpen = true;
+                        break;
                     }
-                @endphp
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between align-items-center {{ $isOpen ? '' : 'collapsed' }}" href="#" data-bs-toggle="collapse" 
-                       data-bs-target="#collapse{{ Str::slug($menu->title) }}" 
-                       aria-expanded="{{ $isOpen ? 'true' : 'false' }}" 
-                       aria-controls="collapse{{ Str::slug($menu->title) }}">
-                        <span><i class="{{ $menu->icon }}"></i> {{ $menu->title }}</span>
-                        <i class="fas fa-angle-right"></i> <!-- ikon dropdown kanan -->
-                    </a>
-                    <div id="collapse{{ Str::slug($menu->title) }}" class="collapse {{ $isOpen ? 'show' : '' }}" data-bs-parent="#accordionSidebar">
-                        <div class="bg-transparent py-2 collapse-inner rounded">
-                            @foreach ($menu->children as $child)
-                                <a class="collapse-item {{ request()->is($child->path . '*') ? 'active-link' : '' }}" href="/{{ $child->path }}">
-                                    {{ $child->title }}
-                                </a>
-                            @endforeach
-                        </div>
+                }
+            @endphp
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center {{ $isOpen ? '' : 'collapsed' }}" 
+                   href="#" data-bs-toggle="collapse" 
+                   data-bs-target="#collapse{{ Str::slug($menu->title) }}" 
+                   aria-expanded="{{ $isOpen ? 'true' : 'false' }}" 
+                   aria-controls="collapse{{ Str::slug($menu->title) }}">
+                    <span><i class="{{ $menu->icon }}"></i> {{ $menu->title }}</span>
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <div id="collapse{{ Str::slug($menu->title) }}" class="collapse {{ $isOpen ? 'show' : '' }}" data-bs-parent="#accordionSidebar">
+                    <div class="bg-transparent py-2 collapse-inner rounded">
+                        @foreach ($menu->children as $child)
+                            <a class="collapse-item {{ request()->is($child->path . '*') ? 'active-link' : '' }}" href="/{{ $child->path }}">
+                                {{ $child->title }}
+                            </a>
+                        @endforeach
                     </div>
-                </li>
-            @else
-                <li class="nav-item {{ request()->is($menu->path . '*') ? 'active' : '' }}">
-                    <a class="nav-link {{ request()->is($menu->path . '*') ? 'active-link' : '' }}" href="/{{ $menu->path }}">
-                        <i class="{{ $menu->icon }}"></i>
-                        <span>{{ $menu->title }}</span>
-                    </a>
-                </li>
-            @endif
-        @endforeach
-    @endauth    
+                </div>
+            </li>
+        @else
+            <li class="nav-item {{ request()->is($menu->path . '*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->is($menu->path . '*') ? 'active-link' : '' }}" href="/{{ $menu->path }}">
+                    <i class="{{ $menu->icon }}"></i>
+                    <span>{{ $menu->title }}</span>
+                </a>
+            </li>
+        @endif
+    @endforeach
+@endauth    
 
-    <hr class="sidebar-divider d-none d-md-block">
+<hr class="sidebar-divider d-none d-md-block">
 
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
+<div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+</div>
 </ul>
 
 <style>
@@ -238,43 +238,37 @@
     color: #000 !important;
 }
 
-/* Child menu aktif tanpa kotak, teks hitam */
+/* Child menu aktif */
 .collapse-inner .collapse-item.active-link {
     font-weight: bold;
-    background: transparent; /* hilangkan kotak */
+    background: transparent;
     color: #000 !important;
 }
 
-/* Dropdown icon kanan */
-.nav-link.d-flex.justify-content-between.align-items-center i.fas.fa-angle-left {
+/* Rotasi ikon saat submenu terbuka */
+.nav-link[aria-expanded="true"] i.fas.fa-angle-right {
+    transform: rotate(90deg);
     transition: transform 0.3s ease;
 }
 
-/* Rotasi ikon saat submenu terbuka */
-.nav-link[aria-expanded="true"] i.fas.fa-angle-left {
-    transform: rotate(-90deg);
-}
-
-/* ===== Responsif Sidebar di Mobile ===== */
+/* ===== RESPONSIVE SIDEBAR UNTUK HP ===== */
 @media (max-width: 992px) {
     .sidebar {
         position: fixed;
         top: 0;
         left: 0;
         height: 100vh;
-        width: 180px; /* Lebar sidebar di HP */
+        width: 190px;
         z-index: 1050;
-        overflow-y: auto; /* Supaya bisa scroll */
+        overflow-y: auto;
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
 
-    /* Saat sidebar aktif (misal toggle ditekan) */
     .sidebar.active {
         transform: translateX(0);
     }
 
-    /* Overlay hitam transparan di belakang sidebar */
     .sidebar-overlay {
         position: fixed;
         top: 0;
@@ -290,13 +284,52 @@
         display: block;
     }
 
-    /* Tombol toggle menu (burger) */
     .sidebar-toggle-btn {
         display: inline-block;
         color: #111;
         font-size: 1.5rem;
         cursor: pointer;
         margin-left: 10px;
+    }
+
+    /* ==== FIX: Submenu muncul ke bawah, bukan ke samping ==== */
+    .nav-item {
+        position: relative;
+    }
+
+    .collapse {
+        display: none;
+        transition: all 0.3s ease;
+    }
+
+    .collapse.show {
+        display: block;
+    }
+
+    .collapse-inner {
+        position: static !important; /* ← Hapus posisi absolut */
+        background: transparent;
+        padding: 0.25rem 0 0.25rem 1rem;
+        border-left: 2px solid rgba(255,255,255,0.3);
+        margin-left: 0.5rem;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .collapse-item {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.75rem;
+        color: #fff !important;
+        display: block;
+    }
+
+    .collapse-item:hover {
+        background: rgba(255,255,255,0.1);
+        color: #000 !important;
     }
 }
 
@@ -317,7 +350,48 @@
     }
 }
 
+/* === FIX SUBMENU AGAR MUNCUL DI BAWAH MENU INDUK (BUKAN KE SAMPING) === */
+@media (max-width: 992px) {
+    /* Hilangkan efek transform dari bootstrap */
+    .sidebar .collapse {
+        position: static !important;
+        transform: none !important;
+        will-change: unset !important;
+        transition: none !important;
+    }
+
+    /* Pastikan kontainer submenu ikut layout vertikal */
+    .sidebar .collapse-inner {
+        position: static !important;
+        background: transparent !important;
+        border-left: 2px solid rgba(255,255,255,0.4);
+        margin-left: 0.75rem;
+        padding: 0.25rem 0 0.25rem 0.75rem;
+        box-shadow: none !important;
+    }
+
+    /* Supaya isi submenu nggak terlalu rapat */
+    .sidebar .collapse-inner .collapse-item {
+        display: block;
+        padding: 0.4rem 0.5rem;
+        font-size: 0.85rem;
+        color: #fff !important;
+        text-decoration: none;
+    }
+
+    .sidebar .collapse-inner .collapse-item:hover {
+        background: rgba(255,255,255,0.15);
+        color: #000 !important;
+        border-radius: 6px;
+    }
+
+    /* Hapus background putih melayang yang bikin tampak di samping */
+    .sidebar .collapse.show {
+        background: transparent !important;
+    }
+}
 </style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.querySelector('.sidebar');
@@ -327,10 +401,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const toggleBtn = document.getElementById('sidebarToggleMobile');
 
-    toggleBtn.addEventListener('click', function() {
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('show');
-    });
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('show');
+        });
+    }
 
     overlay.addEventListener('click', function() {
         sidebar.classList.remove('active');

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,85 +10,139 @@
 
     <title>Login</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Font & Style -->
     <link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900"
         rel="stylesheet">
-
-    <!-- Custom styles for this template-->
     <link href="{{ asset('template/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* ===== Background Gambar Responsif dengan Overlay ===== */
+        body.bg-user {
+            position: relative;
+            background-image: url('{{ asset('images/background.jpeg') }}'); /* Ganti sesuai gambar kamu */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Overlay gelap di atas gambar */
+        body.bg-user::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 0;
+        }
+
+        /* Kontainer utama agar di atas overlay */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Card transparan */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+        }
+
+        /* Tombol login */
+        .btn-primary {
+            background-color: #D32F2F !important;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #B71C1C !important;
+        }
+
+        /* Link style */
+        .text-center a:hover {
+            text-decoration: underline;
+            transition: 0.2s;
+        }
+
+        /* Responsif HP */
+        @media (max-width: 768px) {
+            .col-lg-6.bg-white {
+                background: rgba(255, 255, 255, 0.85);
+                border-radius: 10px;
+            }
+            .card {
+                margin: 10px;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-user">
 
-    {{-- POPUP BERHASIL LOGIN --}}
+    {{-- POPUP LOGIN --}}
     @if (session('success'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                Swal.fire({
-                    title: "Berhasil Login!",
-                    text: "{{ session('success') }}",
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500,
-                    timerProgressBar: false,
-                    allowOutsideClick: false,
-                    willClose: () => {window.location.href = "/dashboard";}
-                });
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                title: "Berhasil Login!",
+                text: "{{ session('success') }}",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+                willClose: () => { window.location.href = "/dashboard"; }
             });
-        </script>
+        });
+    </script>
     @endif
 
     @if (session('status_message'))
     <script>
-    Swal.fire({
-        title: "Pendaftaran Berhasil!",
-        text: "{{ session('status_message') }}",
-        icon: "info",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#D32F2F"
-    });
+        Swal.fire({
+            title: "Pendaftaran Berhasil!",
+            text: "{{ session('status_message') }}",
+            icon: "info",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#D32F2F"
+        });
     </script>
     @endif
 
-    {{-- POPUP GAGAL LOGIN --}}
     @if (session('error'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                Swal.fire({
-                    title: "Gagal Login!",
-                    text: "{{ session('error') }}",
-                    icon: "error",
-                    confirmButtonText: "OK"
-                });
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                title: "Gagal Login!",
+                text: "{{ session('error') }}",
+                icon: "error",
+                confirmButtonText: "OK"
             });
-        </script>
+        });
+    </script>
     @endif
 
-    {{-- VALIDASI ERROR (misal form kosong/dll) --}}
     @if ($errors->any())
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                Swal.fire({
-                    title: "Terjadi Kesalahan",
-                    text: "@foreach($errors->all() as $error) {{ $error }}{{ $loop->last ? '.' : ',' }} @endforeach",
-                    icon: "error",
-                    confirmButtonText: "OK"
-                });
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                title: "Terjadi Kesalahan",
+                text: "@foreach($errors->all() as $error) {{ $error }}{{ $loop->last ? '.' : ',' }} @endforeach",
+                icon: "error",
+                confirmButtonText: "OK"
             });
-        </script>
+        });
+    </script>
     @endif
 
     <div class="container min-vh-100 d-flex align-items-center justify-content-center">
-
-        <!-- Outer Row -->
         <div class="row justify-content-center w-100">
             <div class="col-xl-10 col-lg-12 col-md-9">
                 <div class="card o-hidden border-0 shadow-lg">
                     <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
                         <div class="row">
                             <!-- Logo -->
                             <div class="col-lg-6 d-flex align-items-center justify-content-center bg-white">
@@ -98,6 +151,7 @@
                                      class="img-fluid rounded-circle" 
                                      style="max-width: 250px; width: 80%;">
                             </div>
+
                             <!-- Form -->
                             <div class="col-lg-6">
                                 <div class="p-4">
@@ -109,7 +163,7 @@
                                         @method('POST')
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
-                                                id="inputEmail" name="email" aria-describedby="emailHelp"
+                                                id="inputEmail" name="email"
                                                 placeholder="Masukkan Email...">
                                         </div>
                                         <div class="form-group">
@@ -120,62 +174,40 @@
                                             Login
                                         </button>
                                     </form>
+
                                     <hr>
                                     <div class="text-center mt-3">
                                         <p class="mb-1" style="color:#333; font-size: 0.95rem;">
                                             Belum punya akun?
                                             <a href="/register" 
-                                            style="color:#D32F2F; font-weight:600; text-decoration:none;">
+                                               style="color:#D32F2F; font-weight:600; text-decoration:none;">
                                                 Buat Akun Baru
                                             </a>
                                         </p>
                                         <p style="color:#333; font-size: 0.95rem;">
                                             Lupa password?
                                             <a href="https://wa.me/6289608905946?text=Halo%20Admin,%20saya%20lupa%20password%20akun%20UMKM%20saya." 
-                                            target="_blank" 
-                                            style="color:#004b73; font-weight:600; text-decoration:none;">
+                                               target="_blank" 
+                                               style="color:#004b73; font-weight:600; text-decoration:none;">
                                                 Hubungi Admin
                                             </a>
                                         </p>
                                     </div>
                                 </div>
                             </div>
+                            <!-- End Form -->
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
-    <!-- Bootstrap core JavaScript-->
+    <!-- Bootstrap Scripts -->
     <script src="{{ asset('template/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- Core plugin JavaScript-->
     <script src="{{ asset('template/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-
-    <!-- Custom scripts for all pages-->
     <script src="{{ asset('template/js/sb-admin-2.min.js') }}"></script>
-
-    <style>
-        .bg-user {
-            background: linear-gradient(135deg, #FFD700, #FFEB3B); /* gradasi kuning */
-        }
-        .btn-primary {
-            background-color: #D32F2F !important; /* merah terang */
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #B71C1C !important;
-        }
-        .text-center a:hover {
-            text-decoration: underline;
-            transition: 0.2s;
-        }
-    </style>
 
 </body>
 </html>
