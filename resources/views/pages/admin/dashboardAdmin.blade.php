@@ -35,40 +35,34 @@
         @endforeach
     </div>
 
-    <!-- Diagram Jenis Usaha -->
-    <div class="row justify-content-center">
+    <!-- Diagram Jenis Usaha (Bar Horizontal di atas tabel) -->
+    <div class="row justify-content-center mt-4">
         <div class="col-lg-10 col-md-12">
             <div class="card shadow border-0">
                 <div class="card-header bg-white text-center">
                     <h6 class="m-0 font-weight-bold text-primary">Diagram Jenis Usaha</h6>
                 </div>
-                <div class="card-body">
-                    <div class="row align-items-center">
+                <div class="card-body text-center">
 
-                        <!-- Pie Chart -->
-                        <div class="col-md-6 text-center mb-3 mb-md-0">
-                            <div class="chart-container mx-auto">
-                                <canvas id="usahaPieChart"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- Table -->
-                        <div class="col-md-6">
-                            <h6 class="text-center mb-3">Detail Jumlah per Jenis Usaha</h6>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered text-center mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Jenis Usaha</th>
-                                            <th>Jumlah</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="usahaTableBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
-
+                    <!-- Diagram Batang Horizontal -->
+                    <div class="chart-container mx-auto mb-4">
+                        <canvas id="usahaBarChart"></canvas>
                     </div>
+
+                    <!-- Tabel Detail -->
+                    <div class="table-responsive">
+                        <h6 class="mb-3 text-center">Detail Jumlah per Jenis Usaha</h6>
+                        <table class="table table-sm table-bordered text-center mb-0 shadow-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Jenis Usaha</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usahaTableBody"></tbody>
+                        </table>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -98,31 +92,30 @@
   100% { transform: translateX(300px); }
 }
 
-/* Animasi background gradasi untuk card */
+/* Animasi background gradasi */
 .animated-bg {
   background: linear-gradient(135deg, #f7c948, #f59e0b, #dc2626, #111827);
   background-size: 300% 300%;
   animation: gradientMove 8s ease infinite;
-  color: #fff;
 }
-
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Responsif Chart */
+/* Chart container */
 .chart-container {
   position: relative;
   width: 100%;
-  max-width: 380px;  /* batas maksimum untuk desktop */
-  aspect-ratio: 1 / 1; /* menjaga bentuk bulat */
+  max-width: 700px;
+  height: 450px;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {
   .chart-container {
-    max-width: 280px; /* mengecil di HP */
+    height: 350px;
   }
 }
 </style>
@@ -133,7 +126,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-    // Animasi count-up angka
+    // Fungsi animasi angka
     function animateCount(id, target) {
         let el = document.getElementById(id);
         let current = 0;
@@ -148,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 30);
     }
 
-    // Fade-in cards
+    // Fade-in kartu status
     setTimeout(() => {
         document.querySelectorAll('.status-card').forEach(card => {
             card.style.opacity = 1;
@@ -156,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }, 200);
 
-    // Hover animasi
+    // Hover animasi kartu
     document.querySelectorAll('.status-card').forEach(card => {
         card.addEventListener('mouseenter', () => {
             card.style.transform = 'scale(1.05)';
@@ -168,52 +161,70 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Ambil data jenis usaha
+    // Ambil data jenis usaha (untuk chart dan tabel)
     fetch("{{ route('chart.data') }}")
         .then(response => response.json())
         .then(data => {
             const labels = Object.keys(data);
             const values = Object.values(data);
-            const total = values.reduce((a, b) => a + b, 0);
             const colors = labels.map(() =>
                 `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`
             );
 
-            new Chart(document.getElementById('usahaPieChart'), {
-                type: 'pie',
-                data: { 
-                    labels, 
-                    datasets: [{ 
-                        data: values, 
-                        backgroundColor: colors, 
-                        borderWidth: 1 
-                    }] 
+            const ctx = document.getElementById('usahaBarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Jumlah Usaha',
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: '#fff',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        barThickness: 20
+                    }]
                 },
                 options: {
+                    indexAxis: 'y', // 🔹 Bar horizontal
                     responsive: true,
-                    maintainAspectRatio: false, // agar ikut ukuran container
-                    animation: { 
-                        animateRotate: true, 
-                        animateScale: true, 
-                        duration: 1200, 
-                        easing: 'easeOutBounce' 
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#374151',
+                                font: { size: 12 },
+                                stepSize: 1
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        y: {
+                            ticks: { color: '#374151', font: { size: 12 } },
+                            grid: { display: false }
+                        }
                     },
                     plugins: {
-                        legend: { position: 'bottom' },
+                        legend: { display: false },
                         tooltip: {
-                            callbacks: {
-                                label: ctx => {
-                                    let value = ctx.raw;
-                                    let percentage = ((value / total) * 100).toFixed(1);
-                                    return `${ctx.label}: ${percentage}%`;
-                                }
-                            }
+                            backgroundColor: '#fff',
+                            titleColor: '#111',
+                            bodyColor: '#111',
+                            borderColor: '#ddd',
+                            borderWidth: 1,
+                            displayColors: true,
+                            padding: 8
                         }
+                    },
+                    animation: {
+                        duration: 1200,
+                        easing: 'easeOutCubic'
                     }
                 }
             });
 
-            // Isi tabel detail
+            // Isi tabel
             const tbody = document.getElementById("usahaTableBody");
             tbody.innerHTML = "";
             labels.forEach((label, i) => {
@@ -242,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function() {
             animateCount("totalAll", (data.approve ?? 0) + (data.process ?? 0) + (data.rejected ?? 0));
         });
 
-    // Klik kartu -> redirect ke pemetaan dengan filter status
+    // Klik kartu menuju halaman pemetaan
     document.querySelectorAll('.status-card').forEach(card => {
         card.addEventListener('click', () => {
             let status = card.dataset.status;
@@ -255,4 +266,21 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+@endpush
+
+@push('scripts')
+@if (session('success'))
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    Swal.fire({
+        title: "Login Berhasil!",
+        text: "{{ session('success') }}",
+        icon: "success",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3085d6"
+    });
+});
+</script>
+@endif
 @endpush

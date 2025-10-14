@@ -92,7 +92,7 @@ class AuthController extends Controller
         $user->status = 'submitted'; // default pending approval
         $user->saveOrFail();
 
-        return redirect('/login')->with('success', 'Berhasil mendaftarkan akun, menunggu persetujuan admin');
+        return redirect('/login')->with('status_message', 'Akun Anda berhasil dibuat. Tunggu hingga disetujui admin.');
     }
 
     public function _logout(Request $request)

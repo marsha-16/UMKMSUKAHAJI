@@ -38,13 +38,10 @@
                                         data-bs-toggle="modal" data-bs-target="#editModal{{ $bg->id }}">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
-                                <form action="{{ route('admin.backgrounds.destroy', $bg->id) }}" method="POST" style="display:inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $bg->id }}">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-danger btn-sm" 
+                                        data-bs-toggle="modal" data-bs-target="#deleteModal{{ $bg->id }}">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
                             </td>
                         </tr>
                         @empty
@@ -131,14 +128,16 @@
         </div>
     </div>
 </div>
-
 @endforeach
 
 @endsection
 
 @push('scripts')
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    // preview image function
+    // === Preview Gambar ===
     function previewImage(event, previewId) {
         const input = event.target;
         if (!input.files || !input.files[0]) return;
@@ -149,5 +148,31 @@
         }
         reader.readAsDataURL(input.files[0]);
     }
+
+    // === Popup Berhasil Tanpa Tombol dan Tanpa Garis Timer ===
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            showConfirmButton: false,
+            timer: 1800,
+            timerProgressBar: false,
+            position: 'center'
+        });
+    @endif
+
+    // === Popup Gagal Tanpa Tombol dan Tanpa Garis Timer ===
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: '{{ session('error') }}',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: false,
+            position: 'center'
+        });
+    @endif
 </script>
 @endpush

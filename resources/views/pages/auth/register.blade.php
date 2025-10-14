@@ -83,7 +83,13 @@
                                         <hr>
                                     </form>
                                     <div class="text-center">
-                                        <a class="small" href="/login" style="color:black">Login</a>
+                                        <p class="mb-1" style="color:#333; font-size: 0.95rem;">
+                                            Sudah punya akun?
+                                            <a href="/login" 
+                                            style="color:#D32F2F; font-weight:600; text-decoration:none;">
+                                                Login
+                                            </a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

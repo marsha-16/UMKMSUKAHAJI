@@ -65,7 +65,7 @@
                         <td>{{ $item->promotion }}</td>
                         <td>{{ $item->document }}</td>
                         <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                        {{-- <td>{{ $item->status_label ?? ucfirst($item->status) }}</td> --}}
+                        <td>{{ $item->status_label ?? ucfirst($item->status) }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -127,7 +127,7 @@
                     <th>Platform Digital</th>
                     <th>Dokumen Penunjang</th>
                     <th>Tanggal Input</th>
-                    <th>Status</th>
+                    {{-- <th>Status</th> --}}
                 </tr>
             </thead>
             <tbody>
@@ -143,7 +143,7 @@
                         <td>{{ $item->promotion }}</td>
                         <td>{{ $item->document }}</td>
                         <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                        <td>{{ $item->status_label ?? ucfirst($item->status) }}</td>
+                        {{-- <td>{{ $item->status_label ?? ucfirst($item->status) }}</td> --}}
                     </tr>
                 @endforeach
             </tbody>

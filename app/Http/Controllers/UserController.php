@@ -109,7 +109,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui');
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
     }
 
     public function change_password_view()
@@ -121,20 +121,23 @@ class UserController extends Controller
     {
         $request->validate([
             'old_password' => 'required|min:8',
-            'new_password' => 'required|min:8',
+            'new_password' => 'required|min:8|confirmed', // confirmed = butuh input "new_password_confirmation"
         ]);
 
-        $user = User::findOrFail($userId);
-
-        $currentPasswordIsValid = Hash::check($request->input('old_password'), $user->password);
-
-        if ($currentPasswordIsValid) {
-            $user->password = $request->input('new_password');
-            $user->save();
-
-            return back()->with('success', 'Berhasil Mengubah Password');
+        if (Auth::guard('admin')->check()) {
+            $user = Admin::findOrFail($userId);
+        } else {
+            $user = User::findOrFail($userId);
         }
-        return back()->with('error', 'Gagal mengubah password, password lama tidak valid');
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            return back()->with('error', 'Gagal mengubah password, password lama tidak valid.');
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return back()->with('success', 'Password berhasil diubah!');
     }
 
     public function markAsRead($id)

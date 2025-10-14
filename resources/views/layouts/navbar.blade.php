@@ -1,17 +1,17 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-    <!-- Sidebar Toggle (Topbar) -->
-    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-        <i class="fa fa-bars"></i>
-    </button>
+    <!-- Tombol Toggle Sidebar (muncul hanya di HP) -->
+    <span class="sidebar-toggle-btn d-lg-none me-3" id="sidebarToggleMobile">
+        <i class="fas fa-bars fa-lg"></i>
+    </span>
 
     <!-- Topbar Search (Hanya Admin) -->
     @auth('admin')
     <form action="{{ route('search') }}" method="GET" 
-          class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        class="form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search search-form">
         <div class="input-group">
             <input type="text" name="q" class="form-control bg-light border-0 small"
-                   placeholder="Cari Sesuatu..." value="{{ request('q') }}">
+                placeholder="Cari Sesuatu..." value="{{ request('q') }}">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit">
                     <i class="fas fa-search fa-sm"></i>
@@ -171,3 +171,23 @@
         @endauth
     </ul>
 </nav>
+<style>
+/* Jarak di tampilan HP */
+@media (max-width: 768px) {
+    .search-form {
+        margin-left: 10px; /* beri jarak dari hamburger */
+        flex: 1; /* biar lebar menyesuaikan */
+    }
+
+    .search-form .input-group {
+        width: 100%;
+    }
+}
+
+/* Di layar besar tetap seperti biasa */
+@media (min-width: 769px) {
+    .search-form {
+        margin-left: 15px;
+    }
+}
+</style>

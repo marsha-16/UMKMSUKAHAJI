@@ -14,34 +14,38 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-{
-    $credentials = $request->only('email', 'password');
+    {
+        $credentials = $request->only('email', 'password');
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-        if ($user->status !== 'approved') {
-            Auth::logout();
-            return redirect()->back()->withErrors([
-                'email' => 'Akun anda belum disetujui admin.',
-            ]);
+            // Jika belum disetujui admin
+            if ($user->status !== 'approved') {
+                Auth::logout();
+                return redirect()->back()->withErrors([
+                    'email' => 'Akun anda belum disetujui admin.',
+                ]);
+            }
+
+            // ✅ Kirim session success agar popup muncul
+            return redirect()
+                ->intended('/dashboard')
+                ->with('success', 'Selamat Datang, ' . $user->name . '!');
         }
 
-        return redirect()->intended('/dashboard');
+        // Gagal login
+        return redirect()->back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ])->with('error', 'Email atau password salah.');
     }
 
-    return redirect()->back()->withErrors([
-        'email' => 'Email atau password salah.',
-    ]);
-}
-
-
     public function logout(Request $request)
-{
-    Auth::guard('web')->logout(); 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+    {
+        Auth::guard('web')->logout(); 
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-    return redirect('/'); 
-}
+        return redirect('/'); 
+    }
 }

@@ -104,12 +104,26 @@
 
 <ul class="navbar-nav sidebar sidebar-dark accordion animated-sidebar" id="accordionSidebar">
 
-    <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
-        <div class="sidebar-brand-icon">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid rounded-circle" style="max-width: 100px;">
-        </div>
-    </a>
+<!-- Sidebar - Brand -->
+<a class="sidebar-brand d-flex align-items-center justify-content-start" href="/dashboard">
+    <div class="sidebar-brand-icon">
+        <img src="{{ asset('images/logo.png') }}" 
+             alt="Logo" 
+             class="img-fluid rounded-circle me-2" 
+             style="max-width: 70px;">
+    </div>
+    <div class="text-white">
+        <span class="fw-bold" style="font-size: 0.9rem;">Go Digital</span>
+    </div>
+</a>
+
+<hr class="sidebar-divider my-2">
+
+<!-- Main Menu Title -->
+<div class="text-light fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px; margin-left: 15px;">
+    Main Menu
+</div>
+
 
     <hr class="sidebar-divider my-0">
 
@@ -240,4 +254,87 @@
 .nav-link[aria-expanded="true"] i.fas.fa-angle-left {
     transform: rotate(-90deg);
 }
+
+/* ===== Responsif Sidebar di Mobile ===== */
+@media (max-width: 992px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 180px; /* Lebar sidebar di HP */
+        z-index: 1050;
+        overflow-y: auto; /* Supaya bisa scroll */
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    /* Saat sidebar aktif (misal toggle ditekan) */
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    /* Overlay hitam transparan di belakang sidebar */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+        display: none;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    /* Tombol toggle menu (burger) */
+    .sidebar-toggle-btn {
+        display: inline-block;
+        color: #111;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+}
+
+/* Desktop tetap seperti biasa */
+@media (min-width: 992px) {
+    .sidebar {
+        transform: none !important;
+        position: static;
+        width: 250px;
+    }
+
+    .sidebar-overlay {
+        display: none !important;
+    }
+
+    .sidebar-toggle-btn {
+        display: none;
+    }
+}
+
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.createElement('div');
+    overlay.classList.add('sidebar-overlay');
+    document.body.appendChild(overlay);
+
+    const toggleBtn = document.getElementById('sidebarToggleMobile');
+
+    toggleBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('show');
+    });
+
+    overlay.addEventListener('click', function() {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('show');
+    });
+});
+</script>
