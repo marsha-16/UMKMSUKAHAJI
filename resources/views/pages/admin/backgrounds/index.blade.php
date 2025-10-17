@@ -17,9 +17,9 @@
                 <table class="table table-hover align-middle text-center">
                     <thead style="background: linear-gradient(90deg, #dc3545, #fd7e14, #ffc107); color: white;">
                         <tr>
-                            <th style="width: 60px;">No</th>
-                            <th>Image</th>
-                            <th style="width: 200px;">Aksi</th>
+                            <th style="width: 45px;">No</th>
+                            <th style="width: 300px;">Gambar</th>
+                            <th style="width: 130px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,19 +28,29 @@
                             <td>{{ $index+1 }}</td>
                             <td>
                                 <img src="{{ asset($bg->image) }}" 
-                                     class="img-thumbnail rounded shadow-sm" 
-                                     style="width:180px; height:100px; object-fit:cover;" 
-                                     alt="bg-{{ $bg->id }}">
+                                    class="img-thumbnail rounded shadow-sm" 
+                                    style="width:220px; height:120px; object-fit:cover;" 
+                                    alt="bg-{{ $bg->id }}">
                             </td>
-                            <td>
-                                <button type="button" class="btn btn-sm text-white mb-1" 
-                                        style="background-color:#fd7e14;"
-                                        data-bs-toggle="modal" data-bs-target="#editModal{{ $bg->id }}">
-                                    <i class="fas fa-edit"></i> Edit
+                            <td class="text-center" style="min-width:90px;">
+                                <button 
+                                    class="btn btn-warning btn-sm me-1" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#editModal{{ $bg->id }}" 
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Edit Produk">
+                                    <i class="fas fa-pen"></i>
                                 </button>
-                                <button type="button" class="btn btn-danger btn-sm" 
-                                        data-bs-toggle="modal" data-bs-target="#deleteModal{{ $bg->id }}">
-                                    <i class="fas fa-trash"></i> Hapus
+
+                                <button 
+                                    class="btn btn-danger btn-sm" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal{{ $bg->id }}" 
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Hapus Produk">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </td>
                         </tr>
@@ -174,5 +184,50 @@
             position: 'center'
         });
     @endif
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Inisialisasi semua tooltip Bootstrap
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    // Auto-hide alert sukses
+    setTimeout(() => {
+        const alert = document.getElementById('successMessage');
+        if (alert) {
+            alert.style.transition = "opacity 0.5s ease";
+            alert.style.opacity = "0";
+            setTimeout(() => alert.remove(), 500);
+        }
+    }, 5000);
+});
 </script>
+<style>
+    /* Pastikan tabel bisa digeser di layar kecil */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Supaya semua kolom tetap sejajar dan tidak memecah teks */
+.table th,
+.table td {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* Biar tabel tidak kepotong di container */
+.card-body {
+    overflow-x: auto;
+}
+
+/* Untuk menjaga jarak dan tampilan rapi */
+.table img {
+    max-width: 100%;
+    height: auto;
+}
+
+</style>
 @endpush
