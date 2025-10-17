@@ -26,7 +26,14 @@
                     @forelse ($tentangs as $tentang)
                         <tr>
                             <td class="align-middle font-weight-bold">{{ $tentang->judul }}</td>
-                            <td class="align-middle">{{ Str::limit($tentang->deskripsi, 80) }}</td>
+                            <td class="align-middle">
+                                {{-- Deteksi dan aktifkan link otomatis --}}
+                                {!! preg_replace(
+                                    '/(https?:\/\/[^\s]+)/',
+                                    '<a href="$1" target="_blank" style="color:#f97316; font-weight:bold;">$1</a>',
+                                    e(Str::limit($tentang->deskripsi, 120))
+                                ) !!}
+                            </td>
                             <td class="text-center align-middle">
                                 <!-- Tombol Edit -->
                                 <button class="btn btn-sm text-white" style="background-color: orange;" data-toggle="modal" data-target="#editModal{{ $tentang->id }}">
@@ -141,7 +148,6 @@
 @endsection
 
 @push('scripts')
-<!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>

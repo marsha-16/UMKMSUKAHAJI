@@ -11,11 +11,22 @@ class KatalogController extends Controller
     /**
      * Tampilkan daftar katalog
      */
-    public function index()
-    {
-        $katalogs = Katalog::latest()->paginate(5);
-        return view('pages.admin.katalog.index', compact('katalogs'));
+public function index(Request $request)
+{
+    $query = Katalog::query();
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where('name', 'like', "%{$search}%")
+              ->orWhere('description', 'like', "%{$search}%")
+              ->orWhere('address', 'like', "%{$search}%")
+              ->orWhere('phone', 'like', "%{$search}%");
     }
+
+    $katalogs = $query->paginate(5);
+
+    return view('pages.admin.katalog.index', compact('katalogs'));
+}
 
     /**
      * Simpan katalog baru

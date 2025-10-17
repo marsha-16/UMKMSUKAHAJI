@@ -6,23 +6,24 @@
 <div class="container report-container">
 
     <!-- Header laporan -->
-    <div class="mb-4 report-header text-center">
-        <div class="d-flex justify-content-between align-items-center">
-            <img src="{{ asset('images/logo.sukahaji.png') }}" alt="Logo Kelurahan" style="height:70px;">
-            <div class="flex-grow-1 text-center">
-                <h2 class="mt-2 mb-1">KELURAHAN SUKAHAJI</h2>
-                <p class="mb-0">Jalan H. Zakaria No. 24 Kota Bandung, 40221</p>
-                <p class="mb-0">Telp. (022) 6026078</p>
-            </div>
-            <img src="{{ asset('images/logo.png') }}" alt="Logo UMKM" style="height:100px;">
-        </div>
-        <hr style="border: 1px solid #000;">
+    <div class="mb-4 report-header text-center"> 
+        <div class="d-flex justify-content-between align-items-center"> 
+            <img src="{{ asset('images/logo.sukahaji.png') }}" 
+            alt="Logo Kelurahan" style="height:70px;"> 
+            <div class="flex-grow-1 text-center"> 
+                <h2 class="mt-2 mb-1">KELURAHAN SUKAHAJI</h2> 
+                <p class="mb-0">Jalan H. Zakaria No. 24 Kota Bandung, 40221</p> 
+                <p class="mb-0">Telp. (022) 6026078</p> 
+            </div> 
+            <img src="{{ asset('images/logo.png') }}" 
+            alt="Logo UMKM" style="height:100px;"> 
+        </div> <hr style="border: 1px solid #000;"> 
     </div>
 
     <h5 class="mb-3 text-center">Laporan Data UMKM</h5>
 
-    <!-- Tombol cetak PDF -->
-    <div class="d-flex justify-content-end gap-2 no-print mb-3">
+    <!-- Tombol cetak & kembali -->
+    <div class="action-buttons d-flex flex-wrap justify-content-end gap-2 no-print mb-3">
         <a href="/pemetaan" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
@@ -32,10 +33,9 @@
     </div>
 
     <div class="table-container">
-
-        {{-- Tabel web (paginate) --}}
+        {{-- Tabel web --}}
         <table class="table table-bordered table-hover no-print">
-            <thead>
+            <thead class="table-light text-center align-middle">
                 <tr>
                     <th>No</th>
                     <th>Nama</th>
@@ -43,7 +43,6 @@
                     <th>Alamat</th>
                     <th>No Telepon</th>
                     <th>Jenis Usaha</th>
-                    <th>Yang Lain</th>
                     <th>Jenis Pemasaran</th>
                     <th>Platform Digital</th>
                     <th>Dokumen Penunjang</th>
@@ -52,7 +51,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($pemetaans as $i => $item)
+                @forelse($pemetaans as $i => $item)
                     <tr>
                         <td>{{ $i + 1 + ($pemetaans->currentPage() - 1) * $pemetaans->perPage() }}</td>
                         <td>{{ $item->name }}</td>
@@ -60,14 +59,15 @@
                         <td>{{ $item->address }}</td>
                         <td>{{ $item->phone }}</td>
                         <td>{{ $item->business }}</td>
-                        <td>{{ $item->other }}</td>
                         <td>{{ $item->marketing }}</td>
                         <td>{{ $item->promotion }}</td>
                         <td>{{ $item->document }}</td>
                         <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
                         <td>{{ $item->status_label ?? ucfirst($item->status) }}</td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr><td colspan="11" class="text-center">Tidak ada data</td></tr>
+                @endforelse
             </tbody>
         </table>
 
@@ -113,9 +113,9 @@
             </div>
         @endif
 
-        {{-- Tabel print (all data) --}}
+        {{-- Tabel print --}}
         <table class="table table-bordered table-hover print-only" style="display:none;">
-            <thead>
+            <thead class="text-center align-middle">
                 <tr>
                     <th>No</th>
                     <th>Nama</th>
@@ -127,7 +127,6 @@
                     <th>Platform Digital</th>
                     <th>Dokumen Penunjang</th>
                     <th>Tanggal Input</th>
-                    {{-- <th>Status</th> --}}
                 </tr>
             </thead>
             <tbody>
@@ -143,7 +142,6 @@
                         <td>{{ $item->promotion }}</td>
                         <td>{{ $item->document }}</td>
                         <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                        {{-- <td>{{ $item->status_label ?? ucfirst($item->status) }}</td> --}}
                     </tr>
                 @endforeach
             </tbody>
@@ -158,55 +156,32 @@
     overflow-x: auto;
 }
 
+.action-buttons .btn {
+    font-size: 15px;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+/* Mobile view */
+@media (max-width: 767.98px) {
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-buttons .btn {
+        width: 100%;
+        font-size: 14px;
+    }
+}
+
 /* Print styling */
 @media print {
-    .no-print,
-    .sidebar,
-    .main-sidebar,
-    .navbar,
-    .topbar,
-    .footer,
-    .btn,
-    .pagination {
-        display: none !important;
-    }
-
-    .print-only {
-        display: table !important;
-    }
-
-    body {
-        background: #fff !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        zoom: 70%;
-    }
-
-    .report-container {
-        width: 100% !important;
-        margin: 0 auto !important;
-        padding: 0 !important;
-    }
-
-    table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        table-layout: auto !important;
-    }
-
-    th, td {
-        border: 1px solid #000 !important;
-        padding: 3px 2px !important;
-        font-size: 8.5pt !important;
-        text-align: center !important;
-        vertical-align: middle !important;
-        word-wrap: break-word !important;
-    }
-
-    thead { display: table-header-group !important; }
-    tr, td, th { page-break-inside: avoid !important; break-inside: avoid !important; }
-
-    @page { size: A4 portrait; margin: 10mm 8mm 10mm 8mm; }
+    .no-print, .sidebar, .navbar, .footer, .btn { display: none !important; }
+    .print-only { display: table !important; }
+    body { background: #fff !important; zoom: 70%; }
+    th, td { border: 1px solid #000 !important; padding: 3px 2px !important; font-size: 8.5pt !important; text-align: center !important; }
+    @page { size: A4 portrait; margin: 10mm 8mm; }
 }
 </style>
 @endsection

@@ -48,7 +48,7 @@
 
         <!-- Pemetaan UMKM Sukahaji -->
         <div class="col-12 col-sm-6 col-lg-4">
-            <a href="{{ route('pemetaan') }}" class="text-decoration-none">
+            <a href="{{ route('pemetaan.index') }}" class="text-decoration-none">
                 <div class="card shadow-lg border-0 h-100 text-center hover-card gradient-green text-white">
                     <div class="card-body d-flex flex-column justify-content-center">
                         <i class="fas fa-map-marked-alt fa-3x mb-3"></i>

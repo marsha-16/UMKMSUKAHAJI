@@ -9,14 +9,21 @@ use Illuminate\Validation\Rule;
 
 class UmkmController extends Controller
 {
-    public function index()
-    {
-        $umkms = UMKM::with('user')->paginate(5);
+    public function index(Request $request)
+{
+    $search = $request->input('search');
 
-        return view('pages.umkm.index', [
-            'umkms' => $umkms,
-        ]);
-    }
+    $umkms = UMKM::when($search, function($query, $search) {
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('address', 'like', "%{$search}%");
+        })
+        ->orderBy('id', 'desc')
+        ->paginate(5)
+        ->appends(['search' => $search]); // supaya pagination tetap bawa query search
+
+    return view('pages.umkm.index', compact('umkms'));
+}
+
 
     public function create()
     {

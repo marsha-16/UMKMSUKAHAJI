@@ -15,28 +15,38 @@ class PemetaanController extends Controller
 public function index(Request $request)
 {
     $umkmId = Auth::user()->umkm->id ?? null;
-
     $pemetaans = Pemetaan::query();
 
-    // Kalau role USER → hanya tampilkan aduan miliknya
+    // Kalau role USER → hanya tampilkan datanya sendiri
     if (auth('web')->check() && $umkmId) {
         $pemetaans->where('umkm_id', $umkmId);
     }
 
-    // Kalau guard "admin" → bisa filter umkm_id
-    if (auth('admin')->check() && $request->filled('umkm_id')) {
-        $pemetaans->where('umkm_id', $request->umkm_id);
+    // Kalau ADMIN → bisa filter berdasarkan umkm_id, nama, tanggal, bulan, tahun
+    if (auth('admin')->check()) {
+        if ($request->filled('nama')) {
+            $pemetaans->where('name', 'like', '%' . $request->nama . '%');
+        }
+
+        if ($request->filled('tanggal')) {
+            $pemetaans->whereDate('created_at', $request->tanggal);
+        }
+
+        if ($request->filled('bulan')) {
+            $pemetaans->whereMonth('created_at', $request->bulan);
+        }
+
+        if ($request->filled('tahun')) {
+            $pemetaans->whereYear('created_at', $request->tahun);
+        }
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $pemetaans->where('status', $request->status);
+        }
     }
 
-    // === Filter berdasarkan status dari dashboard ===
-    $status = $request->get('status'); // ambil dari query string
-    if ($status && $status !== 'all') {
-        $pemetaans->where('status', $status);
-    }
+    $pemetaans = $pemetaans->latest()->paginate(5)->appends($request->query());
 
-    $pemetaans = $pemetaans->latest()->paginate(5);
-
-    // Hitung jumlah status process (khusus user)
     $processCount = 0;
     if ($umkmId) {
         $processCount = Pemetaan::where('umkm_id', $umkmId)
@@ -44,7 +54,7 @@ public function index(Request $request)
             ->count();
     }
 
-    return view('pages.pemetaan.index', compact('pemetaans', 'processCount', 'status'));
+    return view('pages.pemetaan.index', compact('pemetaans', 'processCount'));
 }
 
     public function create()
