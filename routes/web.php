@@ -188,7 +188,6 @@ Route::middleware('auth:web')->group(function () {
 
     // Katalog User
     Route::get('/katalog-user', [UserKatalogController::class, 'index'])->name('katalog.index');
-    Route::get('/katalog-user/{id}', [UserKatalogController::class, 'show'])->name('katalog.show');
 
     // Tentang UMKM (user hanya lihat)
     Route::get('/tentang-umkm', [UserTentangUmkmController::class, 'index'])->name('tentang-umkm');
