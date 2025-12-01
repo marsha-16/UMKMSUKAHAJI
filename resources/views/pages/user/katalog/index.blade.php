@@ -52,19 +52,21 @@
                     <div class="card-body d-flex flex-column p-3">
                         <h5 class="card-title fw-bold text-dark mb-2">{{ $item->name }}</h5>
                         <p class="text-muted small mb-2">{{ Str::limit($item->description, 60) }}</p>
-                        <p class="fw-bold text-dark mb-3">Rp {{ number_format($item->price,0,',','.') }}</p>
-                        
+                        <p class="fw-bold text-dark mb-3">
+                            {{ $item->price !== null && $item->price != 0 ? 'Rp ' . number_format($item->price, 0, ',', '.') : '-' }}
+                        </p>
+
                         <!-- Tombol Detail memicu Modal -->
                         <button 
                             class="btn btn-theme btn-sm mt-auto text-dark fw-semibold"
                             data-bs-toggle="modal"
                             data-bs-target="#detailModal"
                             data-name="{{ $item->name }}"
-                            data-price="{{ number_format($item->price,0,',','.') }}"
+                            data-price="{{ $item->price !== null && $item->price != 0 ? 'Rp ' . number_format($item->price, 0, ',', '.') : '-' }}"
                             data-description="{{ $item->description }}"
                             data-image="{{ $item->image ? asset($item->image) : asset('images/noimage.png') }}"
                             data-address="{{ $item->address ?? '-' }}"
-                            data-phone="{{ $item->phone ?? '-' }}">
+                            data-phone="{{ $item->phone && $item->phone !== '' ? $item->phone : '-' }}">
                             <i class="bi bi-info-circle"></i> Detail
                         </button>
                     </div>
@@ -129,7 +131,7 @@
             <h5 id="modalPrice" class="fw-bold text-dark mb-3"></h5>
             <p id="modalDescription" class="text-muted mb-3"></p>
             <p><i class="bi bi-geo-alt-fill text-danger"></i> <span id="modalAddress" class="text-secondary"></span></p>
-            <p><i class="bi bi-telephone-fill text-warning"></i> <span id="modalPhone" class="text-secondary"></span></p>
+            <p><i class="bi bi-telephone-fill text-warning"></i> <span id="modalPhone" class="text-secondary">Telp:</span></p>
             <div class="text-end">
               <button type="button" class="btn btn-gradient mt-3" data-bs-dismiss="modal"><i class="bi bi-arrow-left-circle"></i> Kembali ke Katalog</button>
             </div>
@@ -148,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var button = event.relatedTarget;
 
         document.getElementById('modalName').textContent = button.getAttribute('data-name');
-        document.getElementById('modalPrice').textContent = 'Rp ' + button.getAttribute('data-price');
+        document.getElementById('modalPrice').textContent = button.getAttribute('data-price');
         document.getElementById('modalDescription').textContent = button.getAttribute('data-description');
         document.getElementById('modalImage').src = button.getAttribute('data-image');
         document.getElementById('modalAddress').textContent = button.getAttribute('data-address');
@@ -198,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
         color: #fff;
         font-weight: 500;
         border: none;
-        border-radius: 8px;
+        border-radius: 8px; 
         padding: 10px 18px;
         transition: all 0.3s ease-in-out;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);

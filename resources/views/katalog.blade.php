@@ -90,7 +90,9 @@
                     <div class="card-body d-flex flex-column p-3">
                         <h5 class="card-title fw-bold text-dark mb-2">{{ $item->name }}</h5>
                         <p class="text-muted small mb-2">{{ Str::limit($item->description, 60) }}</p>
-                        <p class="fw-bold text-dark mb-3">Rp {{ number_format($item->price,0,',','.') }}</p>
+                        <p class="fw-bold text-dark mb-3">
+                            {{ $item->price ? 'Rp ' . number_format($item->price, 0, ',', '.') : '-' }}
+                        </p>
                         <button type="button" class="btn btn-theme btn-sm mt-auto text-dark fw-semibold btn-detail" data-item='@json($item)'>
                             <i class="bi bi-info-circle"></i> Detail
                         </button>
@@ -441,10 +443,10 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Isi data ke dalam modal
             document.getElementById('detailName').textContent = item.name;
-            document.getElementById('detailPrice').textContent = 'Rp ' + Number(item.price).toLocaleString('id-ID');
+            document.getElementById('detailPrice').textContent = item.price && item.price != 0 ? 'Rp ' + Number(item.price).toLocaleString('id-ID') : '-';
             document.getElementById('detailDescription').textContent = item.description ?? '-';
             document.getElementById('detailAddress').textContent = item.address ?? '-';
-            document.getElementById('detailPhone').textContent = item.phone ?? '-';
+            document.getElementById('detailPhone').textContent = item.phone && item.phone.trim() !== '' ? item.phone : '-';
             document.getElementById('detailImage').src = item.image ? `/${item.image}` : '/images/noimage.png';
             
             // Tampilkan modal

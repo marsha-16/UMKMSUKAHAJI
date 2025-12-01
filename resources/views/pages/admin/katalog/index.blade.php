@@ -66,10 +66,10 @@
                                 @endif
                             </td>
                             <td>{{ $item->name }}</td>
-                            <td class="fw-bold text-dark">Rp{{ number_format($item->price, 0, ',', '.') }}</td>
+                            <td class="fw-bold text-dark">{{ $item->price ? 'Rp' . number_format($item->price, 0, ',', '.') : '–' }}</td>
                             <td style="min-width:200px;">{{ Str::limit($item->description, 80) }}</td>
                             <td style="min-width:150px;">{{ $item->address }}</td>
-                            <td style="min-width:120px;">{{ $item->phone }}</td>
+                            <td style="min-width:120px;">Telp:{{ $item->phone ?: '–' }}</td>
                             <td class="text-center" style="min-width:90px;">
                                 <button 
                                     class="btn btn-warning btn-sm me-1" 
@@ -112,7 +112,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label>Harga</label>
-                                                    <input type="number" name="price" class="form-control" value="{{ $item->price }}" required>
+                                                    <input type="number" name="price" class="form-control" value="{{ $item->price }}">
                                                 </div>
                                                 <div class="col-12">
                                                     <label>Deskripsi</label>
@@ -237,7 +237,7 @@
                         </div>
                         <div class="col-md-6">
                             <label>Harga</label>
-                            <input type="number" name="price" class="form-control" required>
+                            <input type="number" name="price" class="form-control">
                         </div>
                         <div class="col-12">
                             <label>Deskripsi</label>
